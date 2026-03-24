@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker Demo - Digital Microtools</title>
+    <style>
+        body { background: #000; color: #fff; font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .form-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #333; background: #111; color: #fff; border-radius: 6px; }
+        .btn { background: #0066ff; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+        .list { margin-top: 16px; }
+        .row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; padding: 10px; background:#0c0c0c; border:1px solid #222; border-radius:8px; margin-bottom:8px; }
+        .total { margin-top: 16px; font-weight: 700; color: #00ff99; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" style="color:#93c5fd">← Back to Marketplace</a>
+        <h1>Expense Tracker (Demo)</h1>
+        <div class="form-row">
+            <input id="desc" placeholder="Description">
+            <input id="amt" type="number" min="0" step="0.01" placeholder="Amount">
+            <select id="cat">
+                <option>Food</option>
+                <option>Transport</option>
+                <option>Bills</option>
+                <option>Entertainment</option>
+                <option>Other</option>
+            </select>
+            <input id="date" type="date">
+        </div>
+        <div style="margin-top:10px">
+            <button class="btn" id="add">Add Expense</button>
+            <button class="btn" style="background:#222;border:1px solid #333" id="clear">Clear</button>
+        </div>
+        <div class="total">Total: $<span id="total">0.00</span></div>
+        <div class="list" id="list"></div>
+    </div>
+    <script>
+        const listEl = document.getElementById('list');
+        const totalEl = document.getElementById('total');
+        let items = JSON.parse(localStorage.getItem('demo_expenses')||'[]');
+
+        function render(){
+            listEl.innerHTML = '';
+            let total = 0;
+            items.forEach((it, i)=>{
+                total += it.amount;
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.innerHTML = `<div>${it.desc}</div><div>$${it.amount.toFixed(2)}</div><div>${it.cat}</div><div>${it.date||''}</div>`;
+                listEl.appendChild(row);
+            });
+            totalEl.textContent = total.toFixed(2);
+            localStorage.setItem('demo_expenses', JSON.stringify(items));
+        }
+
+        document.getElementById('add').onclick = () => {
+            const desc = document.getElementById('desc').value.trim();
+            const amt = parseFloat(document.getElementById('amt').value);
+            const cat = document.getElementById('cat').value;
+            const date = document.getElementById('date').value;
+            if(!desc || isNaN(amt)) return alert('Enter description and amount');
+            items.push({desc, amount: amt, cat, date});
+            render();
+            document.getElementById('desc').value='';
+            document.getElementById('amt').value='';
+        };
+        document.getElementById('clear').onclick = () => { items = []; render(); };
+        render();
+    </script>
+</body>
+</html>
+

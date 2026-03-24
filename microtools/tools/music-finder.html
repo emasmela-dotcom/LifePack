@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Music Finder - Discover Amazing Music</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .mode-selector {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mode-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .search-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filter-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .filter-group select {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .music-section {
+            margin-top: 30px;
+        }
+        
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .music-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .music-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .music-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .music-content {
+            padding: 20px;
+        }
+        
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .music-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .music-rating {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .music-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .music-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .music-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .music-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .music-tag {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .music-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.favorite {
+            background: #ff6b6b;
+        }
+        
+        .playlists-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .playlists-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .playlists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .playlist-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .playlist-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .playlist-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .playlist-count {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .favorites-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .favorites-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .favorite-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .favorite-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .favorite-artist {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .mood-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .mood-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .mood-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mood-item:hover, .mood-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .mood-emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .mood-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .tips {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .tips li::before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+        
+        .online-features {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .online-features h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .online-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .online-features li {
+            padding: 5px 0;
+            color: #1976d2;
+        }
+        
+        .online-features li::before {
+            content: "☁️ ";
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .music-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Smart Music Finder</h1>
+            <p>Discover amazing music from every genre and style</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="mode-selector">
+                <h3>Choose Your Mode</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="musicApp.setMode('offline')">🔒 Offline Mode</button>
+                    <button class="mode-btn" onclick="musicApp.setMode('online')">☁️ Online Mode</button>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <span id="modeDescription">Your music preferences stay on your device. Completely private and secure.</span>
+                </p>
+            </div>
+            
+            <div class="search-section">
+                <h2>🔍 Find Your Perfect Music</h2>
+                <form class="search-form" id="searchForm">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for artists, songs, or genres...">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label>Genre</label>
+                        <select id="genreFilter">
+                            <option value="all">All Genres</option>
+                            <option value="rock">Rock</option>
+                            <option value="pop">Pop</option>
+                            <option value="jazz">Jazz</option>
+                            <option value="classical">Classical</option>
+                            <option value="electronic">Electronic</option>
+                            <option value="hip-hop">Hip-Hop</option>
+                            <option value="country">Country</option>
+                            <option value="blues">Blues</option>
+                            <option value="reggae">Reggae</option>
+                            <option value="folk">Folk</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Mood</label>
+                        <select id="moodFilter">
+                            <option value="all">Any Mood</option>
+                            <option value="happy">Happy</option>
+                            <option value="sad">Sad</option>
+                            <option value="energetic">Energetic</option>
+                            <option value="relaxing">Relaxing</option>
+                            <option value="romantic">Romantic</option>
+                            <option value="melancholic">Melancholic</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Era</label>
+                        <select id="eraFilter">
+                            <option value="all">Any Era</option>
+                            <option value="2020s">2020s</option>
+                            <option value="2010s">2010s</option>
+                            <option value="2000s">2000s</option>
+                            <option value="1990s">1990s</option>
+                            <option value="1980s">1980s</option>
+                            <option value="1970s">1970s</option>
+                            <option value="1960s">1960s</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Rating</label>
+                        <select id="ratingFilter">
+                            <option value="all">Any Rating</option>
+                            <option value="4.5">4.5+ stars</option>
+                            <option value="4.0">4.0+ stars</option>
+                            <option value="3.5">3.5+ stars</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="music-section">
+                <h2>🎵 Discovered Music</h2>
+                <div class="music-grid" id="musicGrid">
+                    <!-- Music will be populated here -->
+                </div>
+            </div>
+            
+            <div class="playlists-section">
+                <h3>🎧 Your Playlists</h3>
+                <div class="playlists-grid" id="playlistsGrid">
+                    <!-- Playlists will be populated here -->
+                </div>
+            </div>
+            
+            <div class="favorites-section">
+                <h3>❤️ Your Favorite Songs</h3>
+                <div class="favorites-grid" id="favoritesGrid">
+                    <!-- Favorites will be populated here -->
+                </div>
+            </div>
+            
+            <div class="mood-section">
+                <h3>🎭 Music by Mood</h3>
+                <div class="mood-grid">
+                    <div class="mood-item" onclick="musicApp.filterByMood('happy')">
+                        <div class="mood-emoji">😊</div>
+                        <div class="mood-name">Happy</div>
+                    </div>
+                    <div class="mood-item" onclick="musicApp.filterByMood('sad')">
+                        <div class="mood-emoji">😢</div>
+                        <div class="mood-name">Sad</div>
+                    </div>
+                    <div class="mood-item" onclick="musicApp.filterByMood('energetic')">
+                        <div class="mood-emoji">⚡</div>
+                        <div class="mood-name">Energetic</div>
+                    </div>
+                    <div class="mood-item" onclick="musicApp.filterByMood('relaxing')">
+                        <div class="mood-emoji">😌</div>
+                        <div class="mood-name">Relaxing</div>
+                    </div>
+                    <div class="mood-item" onclick="musicApp.filterByMood('romantic')">
+                        <div class="mood-emoji">💕</div>
+                        <div class="mood-name">Romantic</div>
+                    </div>
+                    <div class="mood-item" onclick="musicApp.filterByMood('melancholic')">
+                        <div class="mood-emoji">🌙</div>
+                        <div class="mood-name">Melancholic</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Music Discovery Tips</h3>
+            <ul>
+                <li>Explore different genres to expand your musical horizons</li>
+                <li>Create playlists for different moods and activities</li>
+                <li>Listen to music from different eras and cultures</li>
+                <li>Follow your favorite artists for new releases</li>
+                <li>Try music recommendation algorithms to discover new songs</li>
+                <li>Share your favorite music with friends and family</li>
+            </ul>
+        </div>
+        
+        <div class="online-features" id="onlineFeatures" style="display: none;">
+            <h4>☁️ Online Features (Pro Version)</h4>
+            <ul>
+                <li>Access to millions of songs from streaming services</li>
+                <li>Real-time music recommendations based on listening history</li>
+                <li>Social sharing and collaborative playlists</li>
+                <li>Integration with music streaming platforms</li>
+                <li>Advanced audio analysis and mood detection</li>
+                <li>Live concert and event recommendations</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class MusicApp {
+            constructor() {
+                this.mode = 'offline';
+                this.music = this.loadMusic();
+                this.favorites = this.loadFavorites();
+                this.playlists = this.loadPlaylists();
+                this.currentFilters = {
+                    genre: 'all',
+                    mood: 'all',
+                    era: 'all',
+                    rating: 'all'
+                };
+                this.init();
+            }
+            
+            init() {
+                document.getElementById('searchForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.searchMusic();
+                });
+                
+                // Filter change handlers
+                document.getElementById('genreFilter').addEventListener('change', (e) => {
+                    this.currentFilters.genre = e.target.value;
+                    this.renderMusic();
+                });
+                
+                document.getElementById('moodFilter').addEventListener('change', (e) => {
+                    this.currentFilters.mood = e.target.value;
+                    this.renderMusic();
+                });
+                
+                document.getElementById('eraFilter').addEventListener('change', (e) => {
+                    this.currentFilters.era = e.target.value;
+                    this.renderMusic();
+                });
+                
+                document.getElementById('ratingFilter').addEventListener('change', (e) => {
+                    this.currentFilters.rating = e.target.value;
+                    this.renderMusic();
+                });
+                
+                this.renderMusic();
+                this.renderFavorites();
+                this.renderPlaylists();
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                
+                // Update mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[onclick="musicApp.setMode('${mode}')"]`).classList.add('active');
+                
+                // Update description
+                const description = document.getElementById('modeDescription');
+                const onlineFeatures = document.getElementById('onlineFeatures');
+                
+                if (mode === 'offline') {
+                    description.textContent = 'Your music preferences stay on your device. Completely private and secure.';
+                    onlineFeatures.style.display = 'none';
+                } else {
+                    description.textContent = 'Access to millions of songs, real-time recommendations, and social features.';
+                    onlineFeatures.style.display = 'block';
+                }
+            }
+            
+            filterByMood(mood) {
+                this.currentFilters.mood = mood;
+                document.getElementById('moodFilter').value = mood;
+                this.renderMusic();
+                
+                // Update mood selection
+                document.querySelectorAll('.mood-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.closest('.mood-item').classList.add('active');
+            }
+            
+            searchMusic() {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                this.renderMusic(query);
+            }
+            
+            renderMusic(query = '') {
+                let filteredMusic = this.music;
+                
+                // Apply filters
+                if (this.currentFilters.genre !== 'all') {
+                    filteredMusic = filteredMusic.filter(song => 
+                        song.genre === this.currentFilters.genre
+                    );
+                }
+                
+                if (this.currentFilters.mood !== 'all') {
+                    filteredMusic = filteredMusic.filter(song => 
+                        song.mood === this.currentFilters.mood
+                    );
+                }
+                
+                if (this.currentFilters.era !== 'all') {
+                    filteredMusic = filteredMusic.filter(song => 
+                        song.era === this.currentFilters.era
+                    );
+                }
+                
+                if (this.currentFilters.rating !== 'all') {
+                    const minRating = parseFloat(this.currentFilters.rating);
+                    filteredMusic = filteredMusic.filter(song => 
+                        song.rating >= minRating
+                    );
+                }
+                
+                // Apply search query
+                if (query) {
+                    filteredMusic = filteredMusic.filter(song => 
+                        song.title.toLowerCase().includes(query) ||
+                        song.artist.toLowerCase().includes(query) ||
+                        song.genre.toLowerCase().includes(query) ||
+                        song.tags.some(tag => 
+                            tag.toLowerCase().includes(query)
+                        )
+                    );
+                }
+                
+                const container = document.getElementById('musicGrid');
+                
+                if (filteredMusic.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No music found</h3>
+                            <p>Try adjusting your search or filters</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = filteredMusic.map(song => `
+                    <div class="music-card">
+                        <div class="music-image">${song.emoji}</div>
+                        <div class="music-content">
+                            <div class="music-header">
+                                <div class="music-title">${song.title}</div>
+                                <div class="music-rating">${song.rating} ⭐</div>
+                            </div>
+                            <div class="music-meta">
+                                <span>🎤 ${song.artist}</span>
+                                <span>🎵 ${song.genre}</span>
+                                <span>📅 ${song.era}</span>
+                            </div>
+                            <div class="music-description">${song.description}</div>
+                            <div class="music-tags">
+                                ${song.tags.map(tag => `<span class="music-tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="music-actions">
+                                <button class="btn" onclick="musicApp.playSong('${song.id}')">Play</button>
+                                <button class="btn favorite" onclick="musicApp.toggleFavorite('${song.id}')">
+                                    ${this.favorites.includes(song.id) ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            renderFavorites() {
+                const favoriteSongs = this.music.filter(song => 
+                    this.favorites.includes(song.id)
+                );
+                
+                const container = document.getElementById('favoritesGrid');
+                
+                if (favoriteSongs.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No favorites yet</h3>
+                            <p>Add songs to your favorites to see them here</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = favoriteSongs.map(song => `
+                    <div class="favorite-item">
+                        <div class="favorite-name">${song.title}</div>
+                        <div class="favorite-artist">${song.artist}</div>
+                    </div>
+                `).join('');
+            }
+            
+            renderPlaylists() {
+                const container = document.getElementById('playlistsGrid');
+                container.innerHTML = `
+                    <div class="playlist-item" onclick="musicApp.createPlaylist()">
+                        <div class="playlist-name">+ Create Playlist</div>
+                        <div class="playlist-count">Start a new playlist</div>
+                    </div>
+                    <div class="playlist-item">
+                        <div class="playlist-name">My Favorites</div>
+                        <div class="playlist-count">${this.favorites.length} songs</div>
+                    </div>
+                    <div class="playlist-item">
+                        <div class="playlist-name">Workout Mix</div>
+                        <div class="playlist-count">12 songs</div>
+                    </div>
+                    <div class="playlist-item">
+                        <div class="playlist-name">Chill Vibes</div>
+                        <div class="playlist-count">8 songs</div>
+                    </div>
+                `;
+            }
+            
+            toggleFavorite(songId) {
+                if (this.favorites.includes(songId)) {
+                    this.favorites = this.favorites.filter(id => id !== songId);
+                } else {
+                    this.favorites.push(songId);
+                }
+                
+                this.saveFavorites();
+                this.renderMusic();
+                this.renderFavorites();
+            }
+            
+            playSong(songId) {
+                const song = this.music.find(s => s.id === songId);
+                if (!song) return;
+                
+                alert(`Now Playing: ${song.title} by ${song.artist}\n\nGenre: ${song.genre}\nMood: ${song.mood}\nRating: ${song.rating} ⭐\n\n${song.description}`);
+            }
+            
+            createPlaylist() {
+                const name = prompt('Enter playlist name:', 'My New Playlist');
+                if (name) {
+                    alert(`Playlist "${name}" created! Add songs to build your collection.`);
+                }
+            }
+            
+            saveFavorites() {
+                localStorage.setItem('musicFavorites', JSON.stringify(this.favorites));
+            }
+            
+            loadFavorites() {
+                const saved = localStorage.getItem('musicFavorites');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            savePlaylists() {
+                localStorage.setItem('musicPlaylists', JSON.stringify(this.playlists));
+            }
+            
+            loadPlaylists() {
+                const saved = localStorage.getItem('musicPlaylists');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            saveMusic() {
+                localStorage.setItem('musicFinder', JSON.stringify(this.music));
+            }
+            
+            loadMusic() {
+                const saved = localStorage.getItem('musicFinder');
+                if (saved) return JSON.parse(saved);
+                
+                // Default music
+                return [
+                    {
+                        id: '1',
+                        title: 'Bohemian Rhapsody',
+                        artist: 'Queen',
+                        emoji: '👑',
+                        genre: 'rock',
+                        mood: 'energetic',
+                        era: '1970s',
+                        rating: '4.9',
+                        description: 'Epic rock opera with operatic elements and powerful vocals.',
+                        tags: ['classic', 'opera', 'epic']
+                    },
+                    {
+                        id: '2',
+                        title: 'Billie Jean',
+                        artist: 'Michael Jackson',
+                        emoji: '🕺',
+                        genre: 'pop',
+                        mood: 'energetic',
+                        era: '1980s',
+                        rating: '4.8',
+                        description: 'Iconic pop song with infectious rhythm and dance moves.',
+                        tags: ['dance', 'iconic', 'pop']
+                    },
+                    {
+                        id: '3',
+                        title: 'Take Five',
+                        artist: 'Dave Brubeck',
+                        emoji: '🎷',
+                        genre: 'jazz',
+                        mood: 'relaxing',
+                        era: '1960s',
+                        rating: '4.7',
+                        description: 'Cool jazz masterpiece with unusual 5/4 time signature.',
+                        tags: ['instrumental', 'cool', 'sophisticated']
+                    },
+                    {
+                        id: '4',
+                        title: 'Clair de Lune',
+                        artist: 'Claude Debussy',
+                        emoji: '🌙',
+                        genre: 'classical',
+                        mood: 'melancholic',
+                        era: '1900s',
+                        rating: '4.9',
+                        description: 'Beautiful impressionist piano piece with dreamy atmosphere.',
+                        tags: ['piano', 'impressionist', 'dreamy']
+                    },
+                    {
+                        id: '5',
+                        title: 'Strobe',
+                        artist: 'Deadmau5',
+                        emoji: '🎧',
+                        genre: 'electronic',
+                        mood: 'energetic',
+                        era: '2010s',
+                        rating: '4.6',
+                        description: 'Progressive house anthem with building energy and euphoric drops.',
+                        tags: ['progressive', 'house', 'electronic']
+                    },
+                    {
+                        id: '6',
+                        title: 'Lose Yourself',
+                        artist: 'Eminem',
+                        emoji: '🎤',
+                        genre: 'hip-hop',
+                        mood: 'energetic',
+                        era: '2000s',
+                        rating: '4.8',
+                        description: 'Motivational rap anthem about seizing opportunities.',
+                        tags: ['rap', 'motivational', 'cinematic']
+                    },
+                    {
+                        id: '7',
+                        title: 'Hotel California',
+                        artist: 'Eagles',
+                        emoji: '🏨',
+                        genre: 'rock',
+                        mood: 'melancholic',
+                        era: '1970s',
+                        rating: '4.7',
+                        description: 'Classic rock ballad with haunting lyrics and guitar solos.',
+                        tags: ['classic', 'ballad', 'guitar']
+                    },
+                    {
+                        id: '8',
+                        title: 'Summertime',
+                        artist: 'Ella Fitzgerald',
+                        emoji: '☀️',
+                        genre: 'jazz',
+                        mood: 'relaxing',
+                        era: '1950s',
+                        rating: '4.9',
+                        description: 'Timeless jazz standard with smooth vocals and warm atmosphere.',
+                        tags: ['vocal', 'standard', 'smooth']
+                    }
+                ];
+            }
+        }
+        
+        // Initialize the music app
+        const musicApp = new MusicApp();
+    </script>
+</body>
+</html>
+

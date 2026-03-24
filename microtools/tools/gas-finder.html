@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Finder - Find Cheap Gas Near You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff9a56 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .search-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff9a56 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .results-section {
+            margin-bottom: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            padding: 8px 15px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-btn.active {
+            background: #ff6b35;
+            color: white;
+            border-color: #ff6b35;
+        }
+
+        .gas-stations {
+            display: grid;
+            gap: 20px;
+        }
+
+        .gas-station {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gas-station:hover {
+            border-color: #ff6b35;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .station-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .station-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .station-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        .station-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-icon {
+            font-size: 1.2rem;
+        }
+
+        .station-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .directions-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .favorite-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .alert-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .offline-mode {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .offline-mode h3 {
+            margin-bottom: 10px;
+        }
+
+        .offline-mode p {
+            opacity: 0.9;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .favorites-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .favorites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .favorites-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .favorite-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .favorite-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .favorite-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .favorite-price {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .remove-favorite {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .demo-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .station-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .station-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛽ Gas Finder</h1>
+            <p>Find the cheapest gas near you and save money on every fill-up!</p>
+        </div>
+
+        <div class="main-content">
+            <button class="demo-btn" onclick="loadDemoData()">🚀 Try Demo</button>
+
+            <div class="offline-mode">
+                <h3>🔒 Privacy First</h3>
+                <p>Your location and search data stays on your device. No tracking, no ads, just savings!</p>
+            </div>
+
+            <div class="search-section">
+                <div class="search-row">
+                    <div class="form-group">
+                        <label for="location">📍 Your Location</label>
+                        <input type="text" id="location" placeholder="Enter city, state or zip code">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelType">⛽ Fuel Type</label>
+                        <select id="fuelType">
+                            <option value="regular">Regular (87)</option>
+                            <option value="midgrade">Midgrade (89)</option>
+                            <option value="premium">Premium (91+)</option>
+                            <option value="diesel">Diesel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="radius">🔍 Search Radius</label>
+                        <select id="radius">
+                            <option value="5">5 miles</option>
+                            <option value="10" selected>10 miles</option>
+                            <option value="25">25 miles</option>
+                            <option value="50">50 miles</option>
+                        </select>
+                    </div>
+                    <button class="search-btn" onclick="searchGasStations()">🔍 Find Gas</button>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3>💰 Your Savings Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalSavings">$0</div>
+                        <div class="stat-label">Total Saved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="gallonsSaved">0</div>
+                        <div class="stat-label">Gallons Saved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stationsVisited">0</div>
+                        <div class="stat-label">Stations Visited</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="bestDeal">$0.00</div>
+                        <div class="stat-label">Best Deal Found</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="favorites-section">
+                <div class="favorites-header">
+                    <h3>⭐ Your Favorite Stations</h3>
+                    <span id="favoritesCount">0 favorites</span>
+                </div>
+                <div class="favorites-list" id="favoritesList">
+                    <p style="text-align: center; color: #666; padding: 20px;">No favorite stations yet. Add some by clicking the ⭐ button!</p>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount">No results yet</div>
+                    <div class="sort-options">
+                        <button class="sort-btn active" onclick="sortBy('price')">Price</button>
+                        <button class="sort-btn" onclick="sortBy('distance')">Distance</button>
+                        <button class="sort-btn" onclick="sortBy('rating')">Rating</button>
+                    </div>
+                </div>
+                <div class="gas-stations" id="gasStations">
+                    <div class="no-results">
+                        <h3>🔍 Ready to Find Cheap Gas?</h3>
+                        <p>Enter your location above to see the best gas prices near you!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gasStations = [];
+        let favorites = JSON.parse(localStorage.getItem('gas_favorites') || '[]');
+        let currentSort = 'price';
+
+        // Demo data for testing
+        const demoStations = [
+            {
+                name: "Shell Station",
+                address: "123 Main St, Downtown",
+                price: 3.45,
+                distance: 0.8,
+                rating: 4.5,
+                phone: "(555) 123-4567",
+                hours: "24/7",
+                services: ["Car Wash", "ATM", "Convenience Store"],
+                lastUpdated: "2 hours ago"
+            },
+            {
+                name: "Chevron Express",
+                address: "456 Oak Ave, Midtown",
+                price: 3.42,
+                distance: 1.2,
+                rating: 4.2,
+                phone: "(555) 234-5678",
+                hours: "6 AM - 10 PM",
+                services: ["ATM", "Air Pump"],
+                lastUpdated: "1 hour ago"
+            },
+            {
+                name: "BP Gas & Go",
+                address: "789 Pine St, Uptown",
+                price: 3.48,
+                distance: 2.1,
+                rating: 4.0,
+                phone: "(555) 345-6789",
+                hours: "5 AM - 11 PM",
+                services: ["Car Wash", "ATM", "Restaurant"],
+                lastUpdated: "30 minutes ago"
+            },
+            {
+                name: "Mobil Quick Stop",
+                address: "321 Elm St, Eastside",
+                price: 3.41,
+                distance: 3.5,
+                rating: 4.3,
+                phone: "(555) 456-7890",
+                hours: "24/7",
+                services: ["ATM", "Air Pump", "Convenience Store"],
+                lastUpdated: "45 minutes ago"
+            },
+            {
+                name: "Exxon Tiger Mart",
+                address: "654 Maple Dr, Westside",
+                price: 3.47,
+                distance: 4.2,
+                rating: 3.8,
+                phone: "(555) 567-8901",
+                hours: "6 AM - 12 AM",
+                services: ["Car Wash", "ATM"],
+                lastUpdated: "1 hour ago"
+            }
+        ];
+
+        function loadDemoData() {
+            gasStations = [...demoStations];
+            displayResults();
+            updateStats();
+        }
+
+        function searchGasStations() {
+            const location = document.getElementById('location').value;
+            const fuelType = document.getElementById('fuelType').value;
+            const radius = document.getElementById('radius').value;
+
+            if (!location.trim()) {
+                alert('Please enter your location to search for gas stations.');
+                return;
+            }
+
+            // Simulate API call with demo data
+            setTimeout(() => {
+                gasStations = [...demoStations];
+                displayResults();
+                updateStats();
+            }, 1000);
+        }
+
+        function displayResults() {
+            const container = document.getElementById('gasStations');
+            const count = document.getElementById('resultsCount');
+            
+            if (gasStations.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>🔍 Ready to Find Cheap Gas?</h3>
+                        <p>Enter your location above to see the best gas prices near you!</p>
+                    </div>
+                `;
+                count.textContent = 'No results yet';
+                return;
+            }
+
+            count.textContent = `${gasStations.length} gas stations found`;
+
+            container.innerHTML = gasStations.map(station => `
+                <div class="gas-station" onclick="selectStation('${station.name}')">
+                    <div class="station-header">
+                        <div class="station-name">${station.name}</div>
+                        <div class="station-price">$${station.price.toFixed(2)}</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="detail-item">
+                            <span class="detail-icon">📍</span>
+                            <span>${station.address}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📏</span>
+                            <span>${station.distance} miles away</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">⭐</span>
+                            <span>${station.rating}/5.0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📞</span>
+                            <span>${station.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">🕒</span>
+                            <span>${station.hours}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">🛠️</span>
+                            <span>${station.services.join(', ')}</span>
+                        </div>
+                    </div>
+                    <div class="station-actions">
+                        <button class="action-btn directions-btn" onclick="getDirections('${station.name}', '${station.address}')">
+                            🗺️ Directions
+                        </button>
+                        <button class="action-btn favorite-btn" onclick="toggleFavorite('${station.name}', '${station.address}', ${station.price})">
+                            ⭐ Favorite
+                        </button>
+                        <button class="action-btn alert-btn" onclick="setPriceAlert('${station.name}', ${station.price})">
+                            🔔 Price Alert
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sortBy(type) {
+            currentSort = type;
+            
+            // Update active button
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'price') {
+                gasStations.sort((a, b) => a.price - b.price);
+            } else if (type === 'distance') {
+                gasStations.sort((a, b) => a.distance - b.distance);
+            } else if (type === 'rating') {
+                gasStations.sort((a, b) => b.rating - a.rating);
+            }
+
+            displayResults();
+        }
+
+        function selectStation(name) {
+            const station = gasStations.find(s => s.name === name);
+            if (station) {
+                alert(`Selected: ${station.name}\nPrice: $${station.price}\nDistance: ${station.distance} miles\nRating: ${station.rating}/5.0`);
+            }
+        }
+
+        function getDirections(name, address) {
+            alert(`Getting directions to ${name} at ${address}\n\nThis would open your default maps app with the route.`);
+        }
+
+        function toggleFavorite(name, address, price) {
+            const existingIndex = favorites.findIndex(f => f.name === name);
+            
+            if (existingIndex >= 0) {
+                favorites.splice(existingIndex, 1);
+                alert(`Removed ${name} from favorites`);
+            } else {
+                favorites.push({ name, address, price, dateAdded: new Date().toISOString() });
+                alert(`Added ${name} to favorites`);
+            }
+            
+            localStorage.setItem('gas_favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function setPriceAlert(name, price) {
+            const targetPrice = prompt(`Set price alert for ${name}\nCurrent price: $${price}\nEnter target price:`);
+            
+            if (targetPrice && !isNaN(targetPrice)) {
+                const alert = {
+                    station: name,
+                    currentPrice: price,
+                    targetPrice: parseFloat(targetPrice),
+                    dateSet: new Date().toISOString()
+                };
+                
+                const alerts = JSON.parse(localStorage.getItem('gas_alerts') || '[]');
+                alerts.push(alert);
+                localStorage.setItem('gas_alerts', JSON.stringify(alerts));
+                
+                alert(`Price alert set! You'll be notified when ${name} drops to $${targetPrice}`);
+            }
+        }
+
+        function updateFavorites() {
+            const container = document.getElementById('favoritesList');
+            const count = document.getElementById('favoritesCount');
+            
+            count.textContent = `${favorites.length} favorites`;
+            
+            if (favorites.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No favorite stations yet. Add some by clicking the ⭐ button!</p>';
+                return;
+            }
+            
+            container.innerHTML = favorites.map(fav => `
+                <div class="favorite-item">
+                    <div class="favorite-info">
+                        <div>
+                            <div class="favorite-name">${fav.name}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${fav.address}</div>
+                        </div>
+                        <div class="favorite-price">$${fav.price.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-favorite" onclick="removeFavorite('${fav.name}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeFavorite(name) {
+            favorites = favorites.filter(f => f.name !== name);
+            localStorage.setItem('gas_favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function updateStats() {
+            // Calculate total savings (demo calculation)
+            const totalSavings = favorites.length * 5.50; // $5.50 saved per favorite station
+            const gallonsSaved = Math.floor(totalSavings / 3.50); // Assuming $3.50/gallon average
+            const stationsVisited = favorites.length;
+            const bestDeal = gasStations.length > 0 ? Math.min(...gasStations.map(s => s.price)) : 0;
+            
+            document.getElementById('totalSavings').textContent = `$${totalSavings.toFixed(2)}`;
+            document.getElementById('gallonsSaved').textContent = gallonsSaved;
+            document.getElementById('stationsVisited').textContent = stationsVisited;
+            document.getElementById('bestDeal').textContent = `$${bestDeal.toFixed(2)}`;
+        }
+
+        // Initialize
+        updateFavorites();
+        updateStats();
+    </script>
+</body>
+</html>
+

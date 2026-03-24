@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Builder - Create Professional Resumes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e1e5e9;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .resume-preview {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+        
+        .resume-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .resume-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .resume-title {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .resume-contact {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .resume-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            padding-bottom: 5px;
+        }
+        
+        .experience-item,
+        .education-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .item-company {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .item-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .item-description {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .skill-category {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .skill-category h5 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .skill-list {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .template-card {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .template-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .template-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .resume-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .resume-item {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .resume-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .resume-item p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .resume-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .download-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .download-option {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .download-option:hover {
+            border-color: #667eea;
+        }
+        
+        .download-option h5 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .download-option p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .ai-suggestions {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .ai-suggestions h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .suggestion-item {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-left: 3px solid #2196f3;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+            }
+            
+            .resume-contact {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 AI Resume Builder</h1>
+            <p>Create professional resumes that get you hired. AI-powered suggestions and templates.</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('builder')">✍️ Resume Builder</div>
+                <div class="tab" onclick="switchTab('templates')">📝 Templates</div>
+                <div class="tab" onclick="switchTab('gallery')">📚 Gallery</div>
+                <div class="tab" onclick="switchTab('analytics')">📊 Analytics</div>
+            </div>
+            
+            <!-- Resume Builder Tab -->
+            <div id="builder" class="tab-content active">
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" placeholder="Your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" placeholder="Your last name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="your.email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="City, State">
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedin">LinkedIn (optional)</label>
+                            <input type="url" id="linkedin" placeholder="linkedin.com/in/yourprofile">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>💼 Professional Summary</h3>
+                    <div class="form-group">
+                        <label for="summary">Professional Summary</label>
+                        <textarea id="summary" rows="4" placeholder="Brief description of your professional background and key strengths..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="targetJob">Target Job Title</label>
+                        <input type="text" id="targetJob" placeholder="e.g., Software Engineer, Marketing Manager">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>💼 Work Experience</h3>
+                    <div id="experienceContainer">
+                        <div class="experience-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Job Title</label>
+                                    <input type="text" class="exp-title" placeholder="e.g., Software Engineer">
+                                </div>
+                                <div class="form-group">
+                                    <label>Company</label>
+                                    <input type="text" class="exp-company" placeholder="e.g., Tech Corp">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="text" class="exp-start" placeholder="e.g., Jan 2020">
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="text" class="exp-end" placeholder="e.g., Present">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="exp-description" rows="3" placeholder="Describe your key responsibilities and achievements..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addExperience()">➕ Add Experience</button>
+                </div>
+                
+                <div class="form-section">
+                    <h3>🎓 Education</h3>
+                    <div id="educationContainer">
+                        <div class="education-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Degree</label>
+                                    <input type="text" class="edu-degree" placeholder="e.g., Bachelor of Science">
+                                </div>
+                                <div class="form-group">
+                                    <label>Field of Study</label>
+                                    <input type="text" class="edu-field" placeholder="e.g., Computer Science">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>School</label>
+                                    <input type="text" class="edu-school" placeholder="e.g., University of California">
+                                </div>
+                                <div class="form-group">
+                                    <label>Graduation Year</label>
+                                    <input type="text" class="edu-year" placeholder="e.g., 2020">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addEducation()">➕ Add Education</button>
+                </div>
+                
+                <div class="form-section">
+                    <h3>🛠️ Skills</h3>
+                    <div class="form-group">
+                        <label for="skills">Skills (comma separated)</label>
+                        <textarea id="skills" rows="3" placeholder="e.g., JavaScript, Python, Project Management, Leadership"></textarea>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="generateResume()">🤖 Generate Resume</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">🗑️ Clear</button>
+                    <button class="btn btn-success" onclick="saveResume()">💾 Save</button>
+                </div>
+                
+                <div id="aiSuggestions" class="ai-suggestions" style="display: none;">
+                    <h4>🤖 AI Suggestions</h4>
+                    <div id="suggestionsList">
+                        <!-- AI suggestions will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="resumePreview" class="resume-preview" style="display: none;">
+                    <div id="resumeContent">
+                        <!-- Resume content will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="download-section" id="downloadSection" style="display: none;">
+                    <h4>📥 Download Your Resume</h4>
+                    <div class="download-options">
+                        <div class="download-option" onclick="downloadResume('pdf')">
+                            <h5>PDF</h5>
+                            <p>Print ready</p>
+                        </div>
+                        <div class="download-option" onclick="downloadResume('docx')">
+                            <h5>Word</h5>
+                            <p>Editable format</p>
+                        </div>
+                        <div class="download-option" onclick="downloadResume('txt')">
+                            <h5>Text</h5>
+                            <p>Plain text</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Templates Tab -->
+            <div id="templates" class="tab-content">
+                <div class="form-section">
+                    <h3>📝 Resume Templates</h3>
+                    <p>Choose from our professional templates to get started quickly.</p>
+                </div>
+                
+                <div class="templates-grid">
+                    <div class="template-card" onclick="loadTemplate('modern')">
+                        <h4>💼 Modern Professional</h4>
+                        <p>Clean, contemporary design perfect for tech and business roles</p>
+                    </div>
+                    <div class="template-card" onclick="loadTemplate('creative')">
+                        <h4>🎨 Creative</h4>
+                        <p>Bold design for creative professionals and designers</p>
+                    </div>
+                    <div class="template-card" onclick="loadTemplate('executive')">
+                        <h4>👔 Executive</h4>
+                        <p>Sophisticated layout for senior-level positions</p>
+                    </div>
+                    <div class="template-card" onclick="loadTemplate('minimal')">
+                        <h4>📄 Minimalist</h4>
+                        <p>Simple, clean design that focuses on content</p>
+                    </div>
+                    <div class="template-card" onclick="loadTemplate('academic')">
+                        <h4>🎓 Academic</h4>
+                        <p>Traditional format for academic and research positions</p>
+                    </div>
+                    <div class="template-card" onclick="loadTemplate('startup')">
+                        <h4>🚀 Startup</h4>
+                        <p>Dynamic design for startup and entrepreneurial roles</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Tab -->
+            <div id="gallery" class="tab-content">
+                <div class="form-section">
+                    <h3>📚 Your Resume Gallery</h3>
+                    <p>View and manage all your created resumes.</p>
+                </div>
+                
+                <div id="resumeGallery" class="resume-gallery">
+                    <!-- Resumes will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalResumes">0</div>
+                        <div class="stat-label">Total Resumes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="aiSuggestions">0</div>
+                        <div class="stat-label">AI Suggestions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="timeSaved">0</div>
+                        <div class="stat-label">Hours Saved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="mostUsed">Modern</div>
+                        <div class="stat-label">Most Used Template</div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>📊 Resume Analytics</h3>
+                    <p>Track your resume creation progress and improvements.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let resumeGallery = JSON.parse(localStorage.getItem('resumeGallery') || '[]');
+        let analytics = JSON.parse(localStorage.getItem('resumeAnalytics') || '{"totalResumes": 0, "aiSuggestions": 0, "timeSaved": 0}');
+        
+        // Initialize
+        loadGallery();
+        updateAnalytics();
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'gallery') {
+                loadGallery();
+            } else if (tabName === 'analytics') {
+                updateAnalytics();
+            }
+        }
+        
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const newExperience = document.createElement('div');
+            newExperience.className = 'experience-item';
+            newExperience.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" class="exp-title" placeholder="e.g., Software Engineer">
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" class="exp-company" placeholder="e.g., Tech Corp">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="text" class="exp-start" placeholder="e.g., Jan 2020">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="text" class="exp-end" placeholder="e.g., Present">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="exp-description" rows="3" placeholder="Describe your key responsibilities and achievements..."></textarea>
+                </div>
+                <button class="btn btn-warning" onclick="removeExperience(this)">🗑️ Remove</button>
+            `;
+            container.appendChild(newExperience);
+        }
+        
+        function removeExperience(button) {
+            button.parentElement.remove();
+        }
+        
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const newEducation = document.createElement('div');
+            newEducation.className = 'education-item';
+            newEducation.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Degree</label>
+                        <input type="text" class="edu-degree" placeholder="e.g., Bachelor of Science">
+                    </div>
+                    <div class="form-group">
+                        <label>Field of Study</label>
+                        <input type="text" class="edu-field" placeholder="e.g., Computer Science">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>School</label>
+                        <input type="text" class="edu-school" placeholder="e.g., University of California">
+                    </div>
+                    <div class="form-group">
+                        <label>Graduation Year</label>
+                        <input type="text" class="edu-year" placeholder="e.g., 2020">
+                    </div>
+                </div>
+                <button class="btn btn-warning" onclick="removeEducation(this)">🗑️ Remove</button>
+            `;
+            container.appendChild(newEducation);
+        }
+        
+        function removeEducation(button) {
+            button.parentElement.remove();
+        }
+        
+        function generateResume() {
+            const resumeData = collectResumeData();
+            
+            if (!resumeData.firstName || !resumeData.lastName) {
+                alert('Please fill in your name.');
+                return;
+            }
+            
+            displayResume(resumeData);
+            generateAISuggestions(resumeData);
+            document.getElementById('resumePreview').style.display = 'block';
+            document.getElementById('downloadSection').style.display = 'block';
+        }
+        
+        function collectResumeData() {
+            const experiences = [];
+            const educations = [];
+            
+            // Collect experiences
+            document.querySelectorAll('.experience-item').forEach(item => {
+                const title = item.querySelector('.exp-title').value;
+                const company = item.querySelector('.exp-company').value;
+                const start = item.querySelector('.exp-start').value;
+                const end = item.querySelector('.exp-end').value;
+                const description = item.querySelector('.exp-description').value;
+                
+                if (title && company) {
+                    experiences.push({ title, company, start, end, description });
+                }
+            });
+            
+            // Collect educations
+            document.querySelectorAll('.education-item').forEach(item => {
+                const degree = item.querySelector('.edu-degree').value;
+                const field = item.querySelector('.edu-field').value;
+                const school = item.querySelector('.edu-school').value;
+                const year = item.querySelector('.edu-year').value;
+                
+                if (degree && school) {
+                    educations.push({ degree, field, school, year });
+                }
+            });
+            
+            return {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                location: document.getElementById('location').value,
+                linkedin: document.getElementById('linkedin').value,
+                summary: document.getElementById('summary').value,
+                targetJob: document.getElementById('targetJob').value,
+                skills: document.getElementById('skills').value,
+                experiences: experiences,
+                educations: educations,
+                date: new Date().toISOString()
+            };
+        }
+        
+        function displayResume(data) {
+            const resumeContent = document.getElementById('resumeContent');
+            
+            let html = `
+                <div class="resume-header">
+                    <div class="resume-name">${data.firstName} ${data.lastName}</div>
+                    <div class="resume-title">${data.targetJob || 'Professional'}</div>
+                    <div class="resume-contact">
+                        ${data.email ? `<span>📧 ${data.email}</span>` : ''}
+                        ${data.phone ? `<span>📞 ${data.phone}</span>` : ''}
+                        ${data.location ? `<span>📍 ${data.location}</span>` : ''}
+                        ${data.linkedin ? `<span>💼 ${data.linkedin}</span>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            if (data.summary) {
+                html += `
+                    <div class="resume-section">
+                        <div class="section-title">Professional Summary</div>
+                        <p>${data.summary}</p>
+                    </div>
+                `;
+            }
+            
+            if (data.experiences.length > 0) {
+                html += `
+                    <div class="resume-section">
+                        <div class="section-title">Work Experience</div>
+                `;
+                
+                data.experiences.forEach(exp => {
+                    html += `
+                        <div class="experience-item">
+                            <div class="item-header">
+                                <div>
+                                    <div class="item-title">${exp.title}</div>
+                                    <div class="item-company">${exp.company}</div>
+                                </div>
+                                <div class="item-date">${exp.start} - ${exp.end}</div>
+                            </div>
+                            <div class="item-description">${exp.description}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            
+            if (data.educations.length > 0) {
+                html += `
+                    <div class="resume-section">
+                        <div class="section-title">Education</div>
+                `;
+                
+                data.educations.forEach(edu => {
+                    html += `
+                        <div class="education-item">
+                            <div class="item-header">
+                                <div>
+                                    <div class="item-title">${edu.degree}</div>
+                                    <div class="item-company">${edu.field}</div>
+                                </div>
+                                <div class="item-date">${edu.year}</div>
+                            </div>
+                            <div class="item-description">${edu.school}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            
+            if (data.skills) {
+                const skillsList = data.skills.split(',').map(skill => skill.trim());
+                html += `
+                    <div class="resume-section">
+                        <div class="section-title">Skills</div>
+                        <div class="skills-grid">
+                            <div class="skill-category">
+                                <h5>Technical Skills</h5>
+                                <div class="skill-list">${skillsList.slice(0, Math.ceil(skillsList.length / 2)).join(', ')}</div>
+                            </div>
+                            <div class="skill-category">
+                                <h5>Additional Skills</h5>
+                                <div class="skill-list">${skillsList.slice(Math.ceil(skillsList.length / 2)).join(', ')}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            resumeContent.innerHTML = html;
+        }
+        
+        function generateAISuggestions(data) {
+            const suggestions = [];
+            
+            // Check for missing information
+            if (!data.summary) {
+                suggestions.push('Add a professional summary to highlight your key strengths and career objectives.');
+            }
+            
+            if (data.experiences.length === 0) {
+                suggestions.push('Include your work experience with specific achievements and quantifiable results.');
+            }
+            
+            if (!data.skills) {
+                suggestions.push('List relevant skills that match the job requirements.');
+            }
+            
+            if (!data.linkedin) {
+                suggestions.push('Add your LinkedIn profile to increase professional visibility.');
+            }
+            
+            // Check for weak descriptions
+            data.experiences.forEach(exp => {
+                if (exp.description.length < 50) {
+                    suggestions.push(`Expand the description for "${exp.title}" with specific achievements and responsibilities.`);
+                }
+            });
+            
+            // Display suggestions
+            if (suggestions.length > 0) {
+                const suggestionsList = document.getElementById('suggestionsList');
+                suggestionsList.innerHTML = '';
+                
+                suggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'suggestion-item';
+                    suggestionItem.textContent = suggestion;
+                    suggestionsList.appendChild(suggestionItem);
+                });
+                
+                document.getElementById('aiSuggestions').style.display = 'block';
+                analytics.aiSuggestions += suggestions.length;
+                localStorage.setItem('resumeAnalytics', JSON.stringify(analytics));
+            }
+        }
+        
+        function saveResume() {
+            const resumeData = collectResumeData();
+            
+            if (!resumeData.firstName || !resumeData.lastName) {
+                alert('Please fill in your name.');
+                return;
+            }
+            
+            const resumeId = Date.now().toString();
+            const resumeItem = {
+                id: resumeId,
+                ...resumeData,
+                preview: document.getElementById('resumeContent').innerHTML
+            };
+            
+            resumeGallery.unshift(resumeItem);
+            localStorage.setItem('resumeGallery', JSON.stringify(resumeGallery));
+            
+            analytics.totalResumes++;
+            analytics.timeSaved += 2; // Assume 2 hours saved per resume
+            localStorage.setItem('resumeAnalytics', JSON.stringify(analytics));
+            
+            loadGallery();
+            alert('Resume saved successfully!');
+        }
+        
+        function clearForm() {
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('linkedin').value = '';
+            document.getElementById('summary').value = '';
+            document.getElementById('targetJob').value = '';
+            document.getElementById('skills').value = '';
+            
+            // Clear experiences and educations
+            document.getElementById('experienceContainer').innerHTML = `
+                <div class="experience-item">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" class="exp-title" placeholder="e.g., Software Engineer">
+                        </div>
+                        <div class="form-group">
+                            <label>Company</label>
+                            <input type="text" class="exp-company" placeholder="e.g., Tech Corp">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="text" class="exp-start" placeholder="e.g., Jan 2020">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="text" class="exp-end" placeholder="e.g., Present">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="exp-description" rows="3" placeholder="Describe your key responsibilities and achievements..."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('educationContainer').innerHTML = `
+                <div class="education-item">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Degree</label>
+                            <input type="text" class="edu-degree" placeholder="e.g., Bachelor of Science">
+                        </div>
+                        <div class="form-group">
+                            <label>Field of Study</label>
+                            <input type="text" class="edu-field" placeholder="e.g., Computer Science">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>School</label>
+                            <input type="text" class="edu-school" placeholder="e.g., University of California">
+                        </div>
+                        <div class="form-group">
+                            <label>Graduation Year</label>
+                            <input type="text" class="edu-year" placeholder="e.g., 2020">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resumePreview').style.display = 'none';
+            document.getElementById('downloadSection').style.display = 'none';
+            document.getElementById('aiSuggestions').style.display = 'none';
+        }
+        
+        function downloadResume(format) {
+            const resumeData = collectResumeData();
+            const fileName = `${resumeData.firstName}_${resumeData.lastName}_Resume.${format}`;
+            
+            // Simulate download
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('Resume download would be available in the full version');
+            link.click();
+            
+            alert(`Resume downloaded as ${format.toUpperCase()} format!`);
+        }
+        
+        function loadTemplate(templateType) {
+            const templates = {
+                'modern': {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    targetJob: 'Software Engineer',
+                    summary: 'Experienced software engineer with 5+ years of experience in full-stack development. Passionate about creating efficient, scalable solutions and leading development teams.'
+                },
+                'creative': {
+                    firstName: 'Jane',
+                    lastName: 'Smith',
+                    targetJob: 'Creative Director',
+                    summary: 'Award-winning creative director with expertise in brand strategy, visual design, and team leadership. Proven track record of delivering innovative campaigns that drive business growth.'
+                },
+                'executive': {
+                    firstName: 'Michael',
+                    lastName: 'Johnson',
+                    targetJob: 'Chief Technology Officer',
+                    summary: 'Strategic technology leader with 15+ years of experience driving digital transformation and innovation. Expert in building high-performing teams and scaling technology infrastructure.'
+                },
+                'minimal': {
+                    firstName: 'Sarah',
+                    lastName: 'Wilson',
+                    targetJob: 'UX Designer',
+                    summary: 'User-centered designer focused on creating intuitive, accessible experiences. Strong background in research, prototyping, and design systems.'
+                },
+                'academic': {
+                    firstName: 'Dr. Robert',
+                    lastName: 'Brown',
+                    targetJob: 'Research Scientist',
+                    summary: 'PhD in Computer Science with expertise in machine learning and artificial intelligence. Published researcher with 20+ peer-reviewed papers and extensive teaching experience.'
+                },
+                'startup': {
+                    firstName: 'Alex',
+                    lastName: 'Chen',
+                    targetJob: 'Product Manager',
+                    summary: 'Entrepreneurial product manager with experience launching successful products from 0 to 1. Strong background in user research, data analysis, and cross-functional team leadership.'
+                }
+            };
+            
+            const template = templates[templateType];
+            if (template) {
+                document.getElementById('firstName').value = template.firstName;
+                document.getElementById('lastName').value = template.lastName;
+                document.getElementById('targetJob').value = template.targetJob;
+                document.getElementById('summary').value = template.summary;
+            }
+        }
+        
+        function loadGallery() {
+            const gallery = document.getElementById('resumeGallery');
+            gallery.innerHTML = '';
+            
+            if (resumeGallery.length === 0) {
+                gallery.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No resumes created yet.</p>';
+                return;
+            }
+            
+            resumeGallery.forEach(resume => {
+                const resumeItem = document.createElement('div');
+                resumeItem.className = 'resume-item';
+                resumeItem.innerHTML = `
+                    <h4>${resume.firstName} ${resume.lastName}</h4>
+                    <p>${resume.targetJob || 'Professional'} • ${formatDate(resume.date)}</p>
+                    <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; max-height: 200px; overflow: hidden;">
+                        ${resume.preview}
+                    </div>
+                    <div class="resume-actions">
+                        <button class="btn" onclick="viewResume('${resume.id}')">👁️ View</button>
+                        <button class="btn btn-secondary" onclick="editResume('${resume.id}')">✏️ Edit</button>
+                        <button class="btn btn-warning" onclick="deleteResume('${resume.id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                gallery.appendChild(resumeItem);
+            });
+        }
+        
+        function viewResume(resumeId) {
+            const resume = resumeGallery.find(r => r.id === resumeId);
+            if (resume) {
+                alert(`Resume Details:\nName: ${resume.firstName} ${resume.lastName}\nTarget Job: ${resume.targetJob}\nExperiences: ${resume.experiences.length}\nEducations: ${resume.educations.length}\nDate: ${formatDate(resume.date)}`);
+            }
+        }
+        
+        function editResume(resumeId) {
+            const resume = resumeGallery.find(r => r.id === resumeId);
+            if (resume) {
+                // Populate form with resume data
+                document.getElementById('firstName').value = resume.firstName;
+                document.getElementById('lastName').value = resume.lastName;
+                document.getElementById('email').value = resume.email || '';
+                document.getElementById('phone').value = resume.phone || '';
+                document.getElementById('location').value = resume.location || '';
+                document.getElementById('linkedin').value = resume.linkedin || '';
+                document.getElementById('summary').value = resume.summary || '';
+                document.getElementById('targetJob').value = resume.targetJob || '';
+                document.getElementById('skills').value = resume.skills || '';
+                
+                // Clear existing experiences and educations
+                document.getElementById('experienceContainer').innerHTML = '';
+                document.getElementById('educationContainer').innerHTML = '';
+                
+                // Add experiences
+                resume.experiences.forEach(exp => {
+                    addExperience();
+                    const lastExp = document.querySelector('.experience-item:last-child');
+                    lastExp.querySelector('.exp-title').value = exp.title;
+                    lastExp.querySelector('.exp-company').value = exp.company;
+                    lastExp.querySelector('.exp-start').value = exp.start;
+                    lastExp.querySelector('.exp-end').value = exp.end;
+                    lastExp.querySelector('.exp-description').value = exp.description;
+                });
+                
+                // Add educations
+                resume.educations.forEach(edu => {
+                    addEducation();
+                    const lastEdu = document.querySelector('.education-item:last-child');
+                    lastEdu.querySelector('.edu-degree').value = edu.degree;
+                    lastEdu.querySelector('.edu-field').value = edu.field;
+                    lastEdu.querySelector('.edu-school').value = edu.school;
+                    lastEdu.querySelector('.edu-year').value = edu.year;
+                });
+                
+                // Switch to builder tab
+                switchTab('builder');
+            }
+        }
+        
+        function deleteResume(resumeId) {
+            if (confirm('Are you sure you want to delete this resume?')) {
+                resumeGallery = resumeGallery.filter(r => r.id !== resumeId);
+                localStorage.setItem('resumeGallery', JSON.stringify(resumeGallery));
+                loadGallery();
+                alert('Resume deleted successfully!');
+            }
+        }
+        
+        function updateAnalytics() {
+            document.getElementById('totalResumes').textContent = analytics.totalResumes;
+            document.getElementById('aiSuggestions').textContent = analytics.aiSuggestions;
+            document.getElementById('timeSaved').textContent = analytics.timeSaved;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>

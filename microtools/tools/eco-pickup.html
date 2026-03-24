@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eco / local actions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#0e0c0a;--paper:#f5f0e8;--card:#faf7f2;--border:#cdc4b4;--rust:#c1440e;--muted:#7a6e60;--moss:#3d5a3e;--shadow:rgba(14,12,10,.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;padding:24px;}
+    .wrap{max-width:640px;margin:0 auto;}
+    h1{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;}
+    h1 em{color:var(--moss);font-style:normal;}
+    .sub{color:var(--muted);font-size:.9rem;margin:8px 0 24px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px var(--shadow);}
+    .hd{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600;}
+    select,input,button{font-family:inherit;font-size:.9rem;border-radius:8px;border:1px solid var(--border);padding:10px 12px;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    input[type="text"]{flex:1;min-width:180px;}
+    .btn-rust{background:var(--rust);color:#fff;border:none;font-weight:700;cursor:pointer;}
+    .item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border);}
+    .item:last-child{border-bottom:none;}
+    .item.done{opacity:.55;}
+    .pill{font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-radius:4px;background:#dcfce7;color:#14532d;}
+    .pill.food{background:#fef3c7;color:#92400e;}
+    .pill.local{background:#dbeafe;color:#1e3a8a;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Eco &amp; <em>local</em></h1>
+    <p class="sub">Track small actions: food rescue, local shops, repairs — on this device only.</p>
+    <div class="card">
+      <div class="hd">Add action</div>
+      <div class="row">
+        <select id="kind">
+          <option value="food">Food / surplus</option>
+          <option value="local">Local business</option>
+          <option value="repair">Repair / reuse</option>
+        </select>
+        <input type="text" id="txt" placeholder="What will you do?" />
+        <button type="button" class="btn-rust" id="add">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hd">List</div>
+      <div id="list"></div>
+    </div>
+  </div>
+  <script>
+    const K='eco_actions_v1';
+    const labels={food:'Food / surplus',local:'Local',repair:'Repair'};
+    function load(){try{return JSON.parse(localStorage.getItem(K))||[];}catch{return[];}}
+    function save(x){localStorage.setItem(K,JSON.stringify(x));}
+    function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+    function render(){
+      const all=load().slice().reverse();
+      const el=document.getElementById('list');
+      if(!all.length){el.innerHTML='<p style="color:var(--muted)">Nothing here yet.</p>';return;}
+      el.innerHTML=all.map(a=>`
+        <div class="item ${a.done?'done':''}">
+          <input type="checkbox" ${a.done?'checked':''} data-id="${a.id}" />
+          <span class="pill ${a.kind==='food'?'food':a.kind==='local'?'local':''}">${labels[a.kind]||a.kind}</span>
+          <span style="flex:1">${esc(a.text)}</span>
+          <button type="button" data-del="${a.id}" style="background:none;border:none;color:var(--muted);cursor:pointer">×</button>
+        </div>`).join('');
+      el.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+        cb.addEventListener('change',()=>{
+          const x=load(),i=x.findIndex(y=>y.id===cb.dataset.id);
+          if(i>=0){x[i].done=cb.checked;save(x);render();}
+        });
+      });
+      el.querySelectorAll('[data-del]').forEach(b=>{
+        b.addEventListener('click',()=>{save(load().filter(y=>y.id!==b.dataset.del));render();});
+      });
+    }
+    document.getElementById('add').addEventListener('click',()=>{
+      const text=document.getElementById('txt').value.trim();if(!text)return;
+      const x=load();
+      x.push({id:crypto.randomUUID(),kind:document.getElementById('kind').value,text,done:false,t:new Date().toISOString()});
+      save(x);document.getElementById('txt').value='';render();
+    });
+    render();
+  </script>
+</body>
+</html>

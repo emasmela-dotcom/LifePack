@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifePack — Five apps. One life. One price.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C26GN3PML1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Configure Google Analytics
+        gtag('config', 'G-C26GN3PML1', {
+            // Enhanced measurement
+            send_page_view: true,
+            // Custom parameters
+            custom_map: {
+                'custom_parameter_1': 'microtools_visitor',
+                'custom_parameter_2': 'productivity_tools'
+            },
+            // Enhanced ecommerce for tool sales tracking
+            enhanced_ecommerce: true
+        });
+        
+        // Track tool interactions
+        function trackToolClick(toolName, action, price) {
+            gtag('event', 'tool_interaction', {
+                'tool_name': toolName,
+                'action': action,
+                'tool_price': price,
+                'event_category': 'Tools',
+                'event_label': toolName + ' - ' + action
+            });
+        }
+        
+        // Track package interest
+        function trackPackageInterest(packageName, price, savings) {
+            gtag('event', 'package_interest', {
+                'package_name': packageName,
+                'package_price': price,
+                'savings_amount': savings,
+                'event_category': 'Packages',
+                'event_label': packageName
+            });
+        }
+        
+        // Track trial signup
+        function trackTrialSignup(toolName) {
+            gtag('event', 'trial_signup', {
+                'tool_name': toolName,
+                'event_category': 'Conversion',
+                'event_label': toolName + ' - Trial'
+            });
+        }
+        
+        // Track purchase intent
+        function trackPurchaseIntent(toolName, price) {
+            gtag('event', 'purchase_intent', {
+                'tool_name': toolName,
+                'tool_price': price,
+                'event_category': 'Conversion',
+                'event_label': toolName + ' - Purchase'
+            });
+        }
+        
+        // Track scroll depth
+        function trackScrollDepth() {
+            let maxScroll = 0;
+            window.addEventListener('scroll', function() {
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                if (scrollPercent > maxScroll && scrollPercent % 25 === 0) {
+                    maxScroll = scrollPercent;
+                    gtag('event', 'scroll_depth', {
+                        'scroll_percent': scrollPercent,
+                        'event_category': 'Engagement',
+                        'event_label': scrollPercent + '%'
+                    });
+                }
+            });
+        }
+        
+        // Track time on page
+        function trackTimeOnPage() {
+            const startTime = Date.now();
+            window.addEventListener('beforeunload', function() {
+                const timeOnPage = Math.round((Date.now() - startTime) / 1000);
+                gtag('event', 'time_on_page', {
+                    'time_seconds': timeOnPage,
+                    'event_category': 'Engagement',
+                    'event_label': timeOnPage + ' seconds'
+                });
+            });
+        }
+        
+        // Initialize tracking
+        document.addEventListener('DOMContentLoaded', function() {
+            trackScrollDepth();
+            trackTimeOnPage();
+            
+            // Track tool card clicks
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const toolName = this.querySelector('h3').textContent;
+                    const price = this.querySelector('.price').textContent;
+                    trackToolClick(toolName, 'card_click', price);
+                });
+            });
+            
+            // Track package clicks
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const packageName = this.querySelector('h3').textContent;
+                    const price = this.querySelector('.price').textContent;
+                    const savings = this.querySelector('.savings').textContent;
+                    trackPackageInterest(packageName, price, savings);
+                });
+            });
+            
+            // Track trial buttons
+            document.querySelectorAll('.trial-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const toolName = this.closest('.tool-card').querySelector('h3').textContent;
+                    trackTrialSignup(toolName);
+                });
+            });
+            
+            // Track purchase buttons
+            document.querySelectorAll('.purchase-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const toolName = this.closest('.tool-card').querySelector('h3').textContent;
+                    const price = this.closest('.tool-card').querySelector('.price').textContent;
+                    trackPurchaseIntent(toolName, price);
+                });
+            });
+        });
+    </script>
+    
+    <style>
+        :root {
+            --lp-bg: #09090b;
+            --lp-bg2: #0c0c0f;
+            --lp-surface: #121214;
+            --lp-surface2: #18181c;
+            --lp-border: rgba(255,255,255,0.06);
+            --lp-border-hover: rgba(255,255,255,0.14);
+            --lp-text: #fafafa;
+            --lp-muted: #a1a1aa;
+            --lp-subtle: #71717a;
+            --lp-accent: #38bdf8;
+            --lp-accent-dim: rgba(56,189,248,0.15);
+            --lp-success: #4ade80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--lp-bg);
+            background-image: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(56,189,248,0.08), transparent 55%),
+                linear-gradient(180deg, var(--lp-bg2) 0%, var(--lp-bg) 40%);
+            min-height: 100vh;
+            color: var(--lp-muted);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+            z-index: 10;
+            padding-top: 8px;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--lp-text);
+            text-shadow: 0 0 80px rgba(56,189,248,0.12);
+        }
+        
+        .header p {
+            font-size: 1.35rem;
+            margin-bottom: 16px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.35rem;
+            font-weight: 500;
+            margin-bottom: 14px;
+            color: var(--lp-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-tagline {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--lp-text);
+            margin-bottom: 18px;
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .hero-focus {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--lp-subtle);
+            max-width: 640px;
+            margin: 0 auto 8px;
+            line-height: 1.6;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--lp-text);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--lp-muted);
+        }
+        
+        .notice {
+            background: #00ff00 !important;
+            color: white !important;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3) !important;
+        }
+        
+        .category-section {
+            margin-bottom: 60px;
+        }
+        
+        .category-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .category-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--lp-text);
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+        
+        .category-description {
+            font-size: 1.1rem;
+            color: var(--lp-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .tool-card {
+            background: var(--lp-surface);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+            transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            border: 1px solid var(--lp-border);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+            border-color: var(--lp-border-hover);
+        }
+        
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .tool-icon {
+            display: none; /* hide emoji-style icons for a cleaner, more sophisticated look */
+        }
+        
+        .tool-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--lp-text);
+            margin-bottom: 5px;
+        }
+        
+        .tool-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--lp-success);
+        }
+        
+        .tool-description {
+            color: var(--lp-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .tool-features {
+            margin-bottom: 20px;
+        }
+        
+        .tool-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tool-features li {
+            padding: 5px 0;
+            color: var(--lp-subtle);
+            font-size: 0.9rem;
+        }
+        
+        .tool-features li:before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+        
+        .tool-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--lp-text);
+            color: var(--lp-bg);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(250,250,250,0.12);
+        }
+        
+        .btn-secondary {
+            background: var(--lp-surface2);
+            color: var(--lp-text);
+            border: 1px solid var(--lp-border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--lp-border-hover);
+            background: #222228;
+        }
+        
+        .package-deals {
+            background: var(--lp-surface);
+            border: 1px solid var(--lp-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .package-deals h2 {
+            font-size: 2.25rem;
+            color: var(--lp-text);
+            margin-bottom: 30px;
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .packages-grid--single {
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+            grid-template-columns: 1fr;
+        }
+        
+        .package-card {
+            background: var(--lp-surface2);
+            border: 1px solid var(--lp-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--lp-border-hover);
+        }
+        
+        .package-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--lp-text);
+            margin-bottom: 10px;
+        }
+        
+        .package-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--lp-success);
+            margin-bottom: 15px;
+        }
+        
+        .package-savings {
+            background: var(--lp-accent-dim);
+            color: var(--lp-accent);
+            border: 1px solid rgba(56,189,248,0.25);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .package-tools {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        
+        .package-tools h4 {
+            margin-bottom: 15px;
+            color: var(--lp-text);
+        }
+        
+        .package-tools ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .package-tools li {
+            padding: 5px 0;
+            color: var(--lp-muted);
+        }
+        
+        .package-tools li:before {
+            content: "🔧 ";
+            margin-right: 8px;
+        }
+        
+        .testimonials {
+            background: var(--lp-surface);
+            border: 1px solid var(--lp-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 60px 0;
+        }
+        
+        .testimonials h2 {
+            font-size: 2.25rem;
+            color: var(--lp-text);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial {
+            background: var(--lp-surface2);
+            border: 1px solid var(--lp-border);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: var(--lp-muted);
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--lp-text);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--lp-subtle);
+        }
+
+        .footer-brand {
+            color: var(--lp-text);
+            font-weight: 700;
+        }
+
+        .hero-cta {
+            text-align: center;
+            margin: 22px auto 6px;
+            max-width: 520px;
+        }
+
+        .hero-cta .btn {
+            flex: none;
+            display: inline-block;
+            min-width: 240px;
+            padding: 14px 28px;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                gap: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        .featured-finance-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .featured-finance-wrap .tool-card {
+            max-width: 560px;
+            width: 100%;
+        }
+
+        .featured-bonus-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        @media (max-width: 1100px) {
+            .featured-bonus-row {
+                grid-template-columns: repeat(2, minmax(210px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .featured-bonus-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bundle-cta {
+            background: var(--lp-surface);
+            border: 1px solid var(--lp-border);
+            border-radius: 18px;
+            padding: 28px;
+            margin: 24px 0 12px;
+            text-align: center;
+            color: var(--lp-text);
+        }
+
+        .bundle-cta h3 {
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+            color: var(--lp-text);
+        }
+
+        .bundle-cta p {
+            font-size: 1.05rem;
+            color: var(--lp-muted);
+            margin-bottom: 18px;
+        }
+
+        .package-deals-lead {
+            color: var(--lp-muted);
+            font-size: 1.15rem;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LifePack</h1>
+            <p class="hero-tagline">Five apps. One life. One price.</p>
+            <p class="hero-focus">Flagship finance tracker plus four bonus tools. Pay once ($19). Private, local-first. No subscriptions.</p>
+            <div class="hero-cta">
+                <a href="bundle.html" class="btn btn-primary">View LifePack offer — $19</a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="category-title">What’s in LifePack</h2>
+                <p class="category-description">One finance tracker plus four bonus apps — five tools total.</p>
+            </div>
+            <div class="featured-finance-wrap">
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div>
+                            <div class="tool-icon">🤖</div>
+                            <div class="tool-name">Finance tracker</div>
+                        </div>
+                        <div class="tool-price">$19</div>
+                    </div>
+                    <div class="tool-description">Main tool: transactions, budgets, trends, monthly history, and exports.</div>
+                    <div class="tool-actions">
+                        <a href="tools/cashpilot-ai.html" class="btn btn-secondary">Open</a>
+                        <a href="bundle.html" class="btn btn-primary">Buy LifePack</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featured-bonus-row">
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div>
+                            <div class="tool-icon">✓</div>
+                            <div class="tool-name">Daily priorities</div>
+                        </div>
+                        <div class="tool-price">Bonus</div>
+                    </div>
+                    <div class="tool-description">Simple priority list with quick completion recap.</div>
+                    <div class="tool-actions">
+                        <a href="tools/focusflow-planner.html" class="btn btn-secondary">Open</a>
+                        <a href="bundle.html" class="btn btn-primary">Included</a>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div>
+                            <div class="tool-icon">💚</div>
+                            <div class="tool-name">Wellness check-in</div>
+                        </div>
+                        <div class="tool-price">Bonus</div>
+                    </div>
+                    <div class="tool-description">Mood plus notes tracker with private local history.</div>
+                    <div class="tool-actions">
+                        <a href="tools/wellness-check-in.html" class="btn btn-secondary">Open</a>
+                        <a href="bundle.html" class="btn btn-primary">Included</a>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div>
+                            <div class="tool-icon">📌</div>
+                            <div class="tool-name">Local board</div>
+                        </div>
+                        <div class="tool-price">Bonus</div>
+                    </div>
+                    <div class="tool-description">Create simple local community/hobby posts offline.</div>
+                    <div class="tool-actions">
+                        <a href="tools/circle-board.html" class="btn btn-secondary">Open</a>
+                        <a href="bundle.html" class="btn btn-primary">Included</a>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div>
+                            <div class="tool-icon">🌱</div>
+                            <div class="tool-name">Eco &amp; local</div>
+                        </div>
+                        <div class="tool-price">Bonus</div>
+                    </div>
+                    <div class="tool-description">Track local green actions and completion progress.</div>
+                    <div class="tool-actions">
+                        <a href="tools/eco-pickup.html" class="btn btn-secondary">Open</a>
+                        <a href="bundle.html" class="btn btn-primary">Included</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LifePack (only package) -->
+        <div class="package-deals">
+            <h2>LifePack</h2>
+            <p class="package-deals-lead">Five apps. One life. One price. Pay once — no subscription.</p>
+            <div class="packages-grid packages-grid--single">
+                <div class="package-card">
+                    <div class="package-name">LifePack — 5 apps</div>
+                    <div class="package-price">$19</div>
+                    <div class="package-savings">One-time</div>
+                    <div class="package-tools">
+                        <h4>Includes:</h4>
+                        <ul>
+                            <li>Finance tracker (CashPilot AI)</li>
+                            <li>Daily priorities</li>
+                            <li>Wellness check-in</li>
+                            <li>Local board</li>
+                            <li>Eco &amp; local</li>
+                        </ul>
+                    </div>
+                    <a href="bundle.html" class="btn btn-primary" style="width: 100%;">View offer &amp; pay — $19</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Testimonials -->
+        <div class="testimonials">
+            <h2>What People Are Saying</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        "I love that everything works offline. I can track my habits and expenses even when I'm traveling without internet."
+                    </div>
+                    <div class="testimonial-author">- Mike R., Digital Nomad</div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        "The privacy-first approach is exactly what I needed. My data stays on my device, and I don't have to worry about it being sold."
+                    </div>
+                    <div class="testimonial-author">- Lisa K., Privacy Advocate</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><span class="footer-brand">LifePack</span> — Five apps. One life. One price.</p>
+            <p>One-time purchase • No subscriptions</p>
+        </div>
+        </div>
+    </div>
+
+</body>
+</html>

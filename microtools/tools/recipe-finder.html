@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Recipe Finder - Discover Amazing Recipes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .mode-selector {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mode-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mode-btn.active {
+            background: #ff9a9e;
+            color: white;
+            border-color: #ff9a9e;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .search-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-btn {
+            background: white;
+            color: #ff9a9e;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .filter-tag:hover, .filter-tag.active {
+            background: white;
+            color: #ff9a9e;
+        }
+        
+        .recipes-section {
+            margin-top: 30px;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .recipe-content {
+            padding: 20px;
+        }
+        
+        .recipe-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .recipe-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .recipe-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .recipe-tag {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .recipe-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.favorite {
+            background: #ff6b6b;
+        }
+        
+        .favorites-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .favorites-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .favorite-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .favorite-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .favorite-meta {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .meal-planning {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .meal-planning h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .meal-plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .meal-day {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .meal-day.selected {
+            border-color: #ff9a9e;
+            background: #fff5f5;
+        }
+        
+        .day-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .meal-recipe {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .shopping-list {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .shopping-list h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .shopping-items {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .shopping-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .tips {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .tips li::before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+        
+        .online-features {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .online-features h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .online-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .online-features li {
+            padding: 5px 0;
+            color: #1976d2;
+        }
+        
+        .online-features li::before {
+            content: "☁️ ";
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .meal-plan-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍳 Smart Recipe Finder</h1>
+            <p>Discover amazing recipes and plan your meals</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="mode-selector">
+                <h3>Choose Your Mode</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="recipeApp.setMode('offline')">🔒 Offline Mode</button>
+                    <button class="mode-btn" onclick="recipeApp.setMode('online')">☁️ Online Mode</button>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <span id="modeDescription">Your recipes stay on your device. Completely private and secure.</span>
+                </p>
+            </div>
+            
+            <div class="search-section">
+                <h2>🔍 Find Your Perfect Recipe</h2>
+                <form class="search-form" id="searchForm">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for recipes, ingredients, or cuisines...">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+                
+                <div class="filter-tags">
+                    <div class="filter-tag active" onclick="recipeApp.filterBy('all')">All</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('breakfast')">Breakfast</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('lunch')">Lunch</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('dinner')">Dinner</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('dessert')">Dessert</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('vegetarian')">Vegetarian</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('vegan')">Vegan</div>
+                    <div class="filter-tag" onclick="recipeApp.filterBy('gluten-free')">Gluten-Free</div>
+                </div>
+            </div>
+            
+            <div class="recipes-section">
+                <h2>🍽️ Discovered Recipes</h2>
+                <div class="recipes-grid" id="recipesGrid">
+                    <!-- Recipes will be populated here -->
+                </div>
+            </div>
+            
+            <div class="favorites-section">
+                <h3>❤️ Your Favorite Recipes</h3>
+                <div class="favorites-grid" id="favoritesGrid">
+                    <!-- Favorites will be populated here -->
+                </div>
+            </div>
+            
+            <div class="meal-planning">
+                <h3>📅 Weekly Meal Planning</h3>
+                <div class="meal-plan-grid">
+                    <div class="meal-day" onclick="recipeApp.selectDay('monday')">
+                        <div class="day-name">Monday</div>
+                        <div class="meal-recipe" id="mondayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('tuesday')">
+                        <div class="day-name">Tuesday</div>
+                        <div class="meal-recipe" id="tuesdayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('wednesday')">
+                        <div class="day-name">Wednesday</div>
+                        <div class="meal-recipe" id="wednesdayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('thursday')">
+                        <div class="day-name">Thursday</div>
+                        <div class="meal-recipe" id="thursdayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('friday')">
+                        <div class="day-name">Friday</div>
+                        <div class="meal-recipe" id="fridayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('saturday')">
+                        <div class="day-name">Saturday</div>
+                        <div class="meal-recipe" id="saturdayRecipe">No meal planned</div>
+                    </div>
+                    <div class="meal-day" onclick="recipeApp.selectDay('sunday')">
+                        <div class="day-name">Sunday</div>
+                        <div class="meal-recipe" id="sundayRecipe">No meal planned</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shopping-list">
+                <h3>🛒 Shopping List</h3>
+                <div class="shopping-items" id="shoppingList">
+                    <div class="empty-state">
+                        <h3>No items yet</h3>
+                        <p>Add recipes to your meal plan to generate a shopping list</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Cooking Tips</h3>
+            <ul>
+                <li>Plan your meals for the week to save time and money</li>
+                <li>Use seasonal ingredients for better flavor and nutrition</li>
+                <li>Prep ingredients in advance for faster cooking</li>
+                <li>Try new cuisines to expand your cooking skills</li>
+                <li>Keep a well-stocked pantry with basic ingredients</li>
+                <li>Don't be afraid to experiment with flavors and spices</li>
+            </ul>
+        </div>
+        
+        <div class="online-features" id="onlineFeatures" style="display: none;">
+            <h4>☁️ Online Features (Pro Version)</h4>
+            <ul>
+                <li>Access to 100,000+ recipes from top chefs</li>
+                <li>Nutritional analysis and dietary restrictions</li>
+                <li>Recipe sharing and community features</li>
+                <li>Integration with grocery delivery services</li>
+                <li>Personalized recommendations based on preferences</li>
+                <li>Video cooking tutorials and techniques</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class RecipeApp {
+            constructor() {
+                this.mode = 'offline';
+                this.recipes = this.loadRecipes();
+                this.favorites = this.loadFavorites();
+                this.mealPlan = this.loadMealPlan();
+                this.currentFilter = 'all';
+                this.init();
+            }
+            
+            init() {
+                document.getElementById('searchForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.searchRecipes();
+                });
+                
+                this.renderRecipes();
+                this.renderFavorites();
+                this.updateMealPlan();
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                
+                // Update mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[onclick="recipeApp.setMode('${mode}')"]`).classList.add('active');
+                
+                // Update description
+                const description = document.getElementById('modeDescription');
+                const onlineFeatures = document.getElementById('onlineFeatures');
+                
+                if (mode === 'offline') {
+                    description.textContent = 'Your recipes stay on your device. Completely private and secure.';
+                    onlineFeatures.style.display = 'none';
+                } else {
+                    description.textContent = 'Access to 100,000+ recipes, nutritional analysis, and community features.';
+                    onlineFeatures.style.display = 'block';
+                }
+            }
+            
+            filterBy(filter) {
+                this.currentFilter = filter;
+                
+                // Update active filter
+                document.querySelectorAll('.filter-tag').forEach(tag => {
+                    tag.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                this.renderRecipes();
+            }
+            
+            searchRecipes() {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                this.renderRecipes(query);
+            }
+            
+            renderRecipes(query = '') {
+                let filteredRecipes = this.recipes;
+                
+                // Apply filter
+                if (this.currentFilter !== 'all') {
+                    filteredRecipes = filteredRecipes.filter(recipe => 
+                        recipe.tags.includes(this.currentFilter)
+                    );
+                }
+                
+                // Apply search query
+                if (query) {
+                    filteredRecipes = filteredRecipes.filter(recipe => 
+                        recipe.title.toLowerCase().includes(query) ||
+                        recipe.ingredients.some(ingredient => 
+                            ingredient.toLowerCase().includes(query)
+                        ) ||
+                        recipe.tags.some(tag => 
+                            tag.toLowerCase().includes(query)
+                        )
+                    );
+                }
+                
+                const container = document.getElementById('recipesGrid');
+                
+                if (filteredRecipes.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No recipes found</h3>
+                            <p>Try adjusting your search or filters</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = filteredRecipes.map(recipe => `
+                    <div class="recipe-card">
+                        <div class="recipe-image">${recipe.emoji}</div>
+                        <div class="recipe-content">
+                            <div class="recipe-title">${recipe.title}</div>
+                            <div class="recipe-meta">
+                                <span>⏱️ ${recipe.time}</span>
+                                <span>👥 ${recipe.servings}</span>
+                                <span>⭐ ${recipe.rating}</span>
+                            </div>
+                            <div class="recipe-description">${recipe.description}</div>
+                            <div class="recipe-tags">
+                                ${recipe.tags.map(tag => `<span class="recipe-tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="recipe-actions">
+                                <button class="btn" onclick="recipeApp.viewRecipe('${recipe.id}')">View Recipe</button>
+                                <button class="btn favorite" onclick="recipeApp.toggleFavorite('${recipe.id}')">
+                                    ${this.favorites.includes(recipe.id) ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            renderFavorites() {
+                const favoriteRecipes = this.recipes.filter(recipe => 
+                    this.favorites.includes(recipe.id)
+                );
+                
+                const container = document.getElementById('favoritesGrid');
+                
+                if (favoriteRecipes.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No favorites yet</h3>
+                            <p>Add recipes to your favorites to see them here</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = favoriteRecipes.map(recipe => `
+                    <div class="favorite-item">
+                        <div class="favorite-name">${recipe.title}</div>
+                        <div class="favorite-meta">${recipe.time} • ${recipe.servings}</div>
+                    </div>
+                `).join('');
+            }
+            
+            toggleFavorite(recipeId) {
+                if (this.favorites.includes(recipeId)) {
+                    this.favorites = this.favorites.filter(id => id !== recipeId);
+                } else {
+                    this.favorites.push(recipeId);
+                }
+                
+                this.saveFavorites();
+                this.renderRecipes();
+                this.renderFavorites();
+            }
+            
+            viewRecipe(recipeId) {
+                const recipe = this.recipes.find(r => r.id === recipeId);
+                if (!recipe) return;
+                
+                alert(`Recipe: ${recipe.title}\n\nIngredients:\n${recipe.ingredients.join('\n')}\n\nInstructions:\n${recipe.instructions.join('\n')}`);
+            }
+            
+            selectDay(day) {
+                // Simple meal planning - in a real app, this would open a recipe selector
+                const recipe = prompt(`Choose a recipe for ${day}:`, 'Pasta with Tomato Sauce');
+                if (recipe) {
+                    this.mealPlan[day] = recipe;
+                    this.saveMealPlan();
+                    this.updateMealPlan();
+                    this.updateShoppingList();
+                }
+            }
+            
+            updateMealPlan() {
+                Object.keys(this.mealPlan).forEach(day => {
+                    const element = document.getElementById(day + 'Recipe');
+                    if (element) {
+                        element.textContent = this.mealPlan[day] || 'No meal planned';
+                    }
+                });
+            }
+            
+            updateShoppingList() {
+                const container = document.getElementById('shoppingList');
+                const plannedMeals = Object.values(this.mealPlan).filter(meal => meal);
+                
+                if (plannedMeals.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No items yet</h3>
+                            <p>Add recipes to your meal plan to generate a shopping list</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Generate shopping list based on planned meals
+                const shoppingItems = [
+                    'Tomatoes (2 lbs)',
+                    'Onions (3 medium)',
+                    'Garlic (1 head)',
+                    'Olive Oil (1 bottle)',
+                    'Pasta (1 lb)',
+                    'Cheese (8 oz)',
+                    'Fresh Herbs (1 bunch)'
+                ];
+                
+                container.innerHTML = shoppingItems.map(item => `
+                    <div class="shopping-item">
+                        <span>${item}</span>
+                        <button onclick="this.parentElement.remove()">✓</button>
+                    </div>
+                `).join('');
+            }
+            
+            saveRecipes() {
+                localStorage.setItem('recipeFinder', JSON.stringify(this.recipes));
+            }
+            
+            loadRecipes() {
+                const saved = localStorage.getItem('recipeFinder');
+                if (saved) return JSON.parse(saved);
+                
+                // Default recipes
+                return [
+                    {
+                        id: '1',
+                        title: 'Classic Spaghetti Carbonara',
+                        emoji: '🍝',
+                        time: '25 min',
+                        servings: '4 people',
+                        rating: '4.8',
+                        description: 'Creamy Italian pasta with eggs, cheese, and pancetta.',
+                        ingredients: ['Spaghetti', 'Eggs', 'Parmesan', 'Pancetta', 'Black Pepper'],
+                        instructions: ['Cook pasta', 'Fry pancetta', 'Mix eggs and cheese', 'Combine everything'],
+                        tags: ['dinner', 'italian', 'pasta']
+                    },
+                    {
+                        id: '2',
+                        title: 'Avocado Toast',
+                        emoji: '🥑',
+                        time: '5 min',
+                        servings: '1 person',
+                        rating: '4.5',
+                        description: 'Simple and healthy breakfast with mashed avocado.',
+                        ingredients: ['Bread', 'Avocado', 'Lemon', 'Salt', 'Red Pepper'],
+                        instructions: ['Toast bread', 'Mash avocado', 'Add lemon and salt', 'Top with red pepper'],
+                        tags: ['breakfast', 'healthy', 'vegetarian']
+                    },
+                    {
+                        id: '3',
+                        title: 'Chicken Stir Fry',
+                        emoji: '🍗',
+                        time: '20 min',
+                        servings: '3 people',
+                        rating: '4.7',
+                        description: 'Quick and flavorful Asian-inspired chicken with vegetables.',
+                        ingredients: ['Chicken Breast', 'Bell Peppers', 'Broccoli', 'Soy Sauce', 'Ginger'],
+                        instructions: ['Cut chicken', 'Heat oil', 'Cook chicken', 'Add vegetables', 'Season with soy sauce'],
+                        tags: ['dinner', 'asian', 'quick']
+                    },
+                    {
+                        id: '4',
+                        title: 'Chocolate Chip Cookies',
+                        emoji: '🍪',
+                        time: '30 min',
+                        servings: '24 cookies',
+                        rating: '4.9',
+                        description: 'Soft and chewy homemade chocolate chip cookies.',
+                        ingredients: ['Flour', 'Butter', 'Sugar', 'Chocolate Chips', 'Vanilla'],
+                        instructions: ['Mix dry ingredients', 'Cream butter and sugar', 'Add eggs', 'Fold in chocolate chips', 'Bake'],
+                        tags: ['dessert', 'baking', 'sweet']
+                    },
+                    {
+                        id: '5',
+                        title: 'Quinoa Buddha Bowl',
+                        emoji: '🥗',
+                        time: '15 min',
+                        servings: '2 people',
+                        rating: '4.6',
+                        description: 'Nutritious bowl with quinoa, vegetables, and tahini dressing.',
+                        ingredients: ['Quinoa', 'Chickpeas', 'Kale', 'Sweet Potato', 'Tahini'],
+                        instructions: ['Cook quinoa', 'Roast vegetables', 'Prepare tahini dressing', 'Assemble bowl'],
+                        tags: ['lunch', 'healthy', 'vegan', 'gluten-free']
+                    }
+                ];
+            }
+            
+            saveFavorites() {
+                localStorage.setItem('recipeFavorites', JSON.stringify(this.favorites));
+            }
+            
+            loadFavorites() {
+                const saved = localStorage.getItem('recipeFavorites');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            saveMealPlan() {
+                localStorage.setItem('recipeMealPlan', JSON.stringify(this.mealPlan));
+            }
+            
+            loadMealPlan() {
+                const saved = localStorage.getItem('recipeMealPlan');
+                return saved ? JSON.parse(saved) : {};
+            }
+        }
+        
+        // Initialize the recipe app
+        const recipeApp = new RecipeApp();
+    </script>
+</body>
+</html>
+

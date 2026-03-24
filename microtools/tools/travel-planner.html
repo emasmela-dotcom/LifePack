@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner - Plan Your Perfect Trip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .trip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .trip-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+        
+        .trip-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .trip-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .trip-dates {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .trip-destination {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .trip-details {
+            margin-bottom: 15px;
+        }
+        
+        .trip-details div {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .trip-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .itinerary-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .itinerary-time {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .itinerary-activity {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .itinerary-location {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .itinerary-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .packing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .packing-item.completed {
+            background: #d4edda;
+            text-decoration: line-through;
+        }
+        
+        .packing-checkbox {
+            margin-right: 10px;
+        }
+        
+        .packing-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .packing-category {
+            font-size: 0.8rem;
+            color: #666;
+            background: #f8f9fa;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .budget-category {
+            font-weight: 500;
+        }
+        
+        .budget-amount {
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .budget-progress {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .budget-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .trip-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .trip-summary h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .trip-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Travel Planner</h1>
+            <p>Plan your perfect trip with detailed itineraries, packing lists, and budget tracking. Make every journey memorable.</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('trips')">🗺️ My Trips</div>
+                <div class="tab" onclick="switchTab('add-trip')">➕ New Trip</div>
+                <div class="tab" onclick="switchTab('itinerary')">📅 Itinerary</div>
+                <div class="tab" onclick="switchTab('packing')">🎒 Packing</div>
+                <div class="tab" onclick="switchTab('budget')">💰 Budget</div>
+            </div>
+            
+            <!-- Trips Tab -->
+            <div id="trips" class="tab-content active">
+                <div class="search-bar">
+                    <input type="text" id="tripSearch" placeholder="Search trips..." onkeyup="filterTrips()">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterByStatus('all')">All</button>
+                    <button class="filter-btn" onclick="filterByStatus('planned')">Planned</button>
+                    <button class="filter-btn" onclick="filterByStatus('current')">Current</button>
+                    <button class="filter-btn" onclick="filterByStatus('completed')">Completed</button>
+                </div>
+                
+                <div id="tripsGrid" class="trip-grid">
+                    <!-- Trips will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Add Trip Tab -->
+            <div id="add-trip" class="tab-content">
+                <div class="form-section">
+                    <h3>✈️ Trip Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tripTitle">Trip Title</label>
+                            <input type="text" id="tripTitle" placeholder="Summer Vacation, Business Trip, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="tripDestination">Destination</label>
+                            <input type="text" id="tripDestination" placeholder="Paris, New York, Tokyo, etc.">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tripStartDate">Start Date</label>
+                            <input type="date" id="tripStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="tripEndDate">End Date</label>
+                            <input type="date" id="tripEndDate">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tripType">Trip Type</label>
+                            <select id="tripType">
+                                <option value="leisure">Leisure</option>
+                                <option value="business">Business</option>
+                                <option value="adventure">Adventure</option>
+                                <option value="family">Family</option>
+                                <option value="romantic">Romantic</option>
+                                <option value="solo">Solo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tripBudget">Budget ($)</label>
+                            <input type="number" id="tripBudget" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripDescription">Description</label>
+                        <textarea id="tripDescription" rows="3" placeholder="Tell us about your trip..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="saveTrip()">💾 Save Trip</button>
+                    <button class="btn btn-secondary" onclick="clearTripForm()">🗑️ Clear Form</button>
+                </div>
+            </div>
+            
+            <!-- Itinerary Tab -->
+            <div id="itinerary" class="tab-content">
+                <div class="form-section">
+                    <h3>📅 Trip Itinerary</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="selectedTrip">Select Trip</label>
+                            <select id="selectedTrip" onchange="loadItinerary()">
+                                <option value="">Choose a trip...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="itineraryDate">Date</label>
+                            <input type="date" id="itineraryDate">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itineraryTime">Time</label>
+                            <input type="time" id="itineraryTime">
+                        </div>
+                        <div class="form-group">
+                            <label for="itineraryActivity">Activity</label>
+                            <input type="text" id="itineraryActivity" placeholder="Visit museum, lunch, meeting, etc.">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itineraryLocation">Location</label>
+                        <input type="text" id="itineraryLocation" placeholder="Museum of Art, Restaurant Name, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="itineraryNotes">Notes</label>
+                        <textarea id="itineraryNotes" rows="2" placeholder="Additional details, contact info, etc."></textarea>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="addItineraryItem()">➕ Add to Itinerary</button>
+                    <button class="btn btn-secondary" onclick="clearItineraryForm()">🗑️ Clear Form</button>
+                </div>
+                
+                <div id="itineraryList">
+                    <!-- Itinerary items will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Packing Tab -->
+            <div id="packing" class="tab-content">
+                <div class="form-section">
+                    <h3>🎒 Packing List</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packingTrip">Select Trip</label>
+                            <select id="packingTrip" onchange="loadPackingList()">
+                                <option value="">Choose a trip...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="packingItem">Add Item</label>
+                            <input type="text" id="packingItem" placeholder="Toothbrush, Passport, Camera, etc.">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packingCategory">Category</label>
+                            <select id="packingCategory">
+                                <option value="clothing">Clothing</option>
+                                <option value="toiletries">Toiletries</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="documents">Documents</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="packingQuantity">Quantity</label>
+                            <input type="number" id="packingQuantity" min="1" value="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="addPackingItem()">➕ Add Item</button>
+                    <button class="btn btn-secondary" onclick="clearPackingForm()">🗑️ Clear Form</button>
+                </div>
+                
+                <div id="packingList">
+                    <!-- Packing items will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Budget Tab -->
+            <div id="budget" class="tab-content">
+                <div class="form-section">
+                    <h3>💰 Trip Budget</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="budgetTrip">Select Trip</label>
+                            <select id="budgetTrip" onchange="loadBudget()">
+                                <option value="">Choose a trip...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="budgetCategory">Category</label>
+                            <select id="budgetCategory">
+                                <option value="accommodation">Accommodation</option>
+                                <option value="transportation">Transportation</option>
+                                <option value="food">Food & Dining</option>
+                                <option value="activities">Activities</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="budgetAmount">Amount ($)</label>
+                            <input type="number" id="budgetAmount" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="budgetDescription">Description</label>
+                            <input type="text" id="budgetDescription" placeholder="Hotel booking, flight, restaurant, etc.">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="addBudgetItem()">➕ Add Budget Item</button>
+                    <button class="btn btn-secondary" onclick="clearBudgetForm()">🗑️ Clear Form</button>
+                </div>
+                
+                <div id="budgetList">
+                    <!-- Budget items will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let trips = JSON.parse(localStorage.getItem('trips') || '[]');
+        let itineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
+        let packingLists = JSON.parse(localStorage.getItem('packingLists') || '[]');
+        let budgets = JSON.parse(localStorage.getItem('budgets') || '[]');
+        let currentFilter = 'all';
+        
+        // Initialize
+        loadTrips();
+        updateTripSelects();
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'itinerary') {
+                loadItinerary();
+            } else if (tabName === 'packing') {
+                loadPackingList();
+            } else if (tabName === 'budget') {
+                loadBudget();
+            }
+        }
+        
+        function saveTrip() {
+            const tripData = {
+                id: Date.now().toString(),
+                title: document.getElementById('tripTitle').value,
+                destination: document.getElementById('tripDestination').value,
+                startDate: document.getElementById('tripStartDate').value,
+                endDate: document.getElementById('tripEndDate').value,
+                type: document.getElementById('tripType').value,
+                budget: parseFloat(document.getElementById('tripBudget').value) || 0,
+                description: document.getElementById('tripDescription').value,
+                status: 'planned',
+                dateCreated: new Date().toISOString()
+            };
+            
+            if (!tripData.title.trim() || !tripData.destination.trim()) {
+                alert('Please enter trip title and destination.');
+                return;
+            }
+            
+            trips.push(tripData);
+            localStorage.setItem('trips', JSON.stringify(trips));
+            
+            clearTripForm();
+            loadTrips();
+            updateTripSelects();
+            
+            alert('Trip saved successfully!');
+        }
+        
+        function clearTripForm() {
+            document.getElementById('tripTitle').value = '';
+            document.getElementById('tripDestination').value = '';
+            document.getElementById('tripStartDate').value = '';
+            document.getElementById('tripEndDate').value = '';
+            document.getElementById('tripType').value = 'leisure';
+            document.getElementById('tripBudget').value = '';
+            document.getElementById('tripDescription').value = '';
+        }
+        
+        function loadTrips() {
+            const tripsGrid = document.getElementById('tripsGrid');
+            tripsGrid.innerHTML = '';
+            
+            trips.forEach(trip => {
+                const tripCard = document.createElement('div');
+                tripCard.className = 'trip-card';
+                tripCard.innerHTML = `
+                    <div class="trip-header">
+                        <div class="trip-title">${trip.title}</div>
+                        <div class="trip-dates">${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}</div>
+                    </div>
+                    <div class="trip-destination">📍 ${trip.destination}</div>
+                    <div class="trip-details">
+                        <div>Type: ${trip.type}</div>
+                        <div>Budget: $${trip.budget.toFixed(2)}</div>
+                        <div>Status: ${trip.status}</div>
+                    </div>
+                    <div class="trip-actions">
+                        <button class="btn btn-secondary" onclick="editTrip('${trip.id}')">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteTrip('${trip.id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                tripsGrid.appendChild(tripCard);
+            });
+        }
+        
+        function updateTripSelects() {
+            const selects = ['selectedTrip', 'packingTrip', 'budgetTrip'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Choose a trip...</option>';
+                trips.forEach(trip => {
+                    const option = document.createElement('option');
+                    option.value = trip.id;
+                    option.textContent = `${trip.title} - ${trip.destination}`;
+                    select.appendChild(option);
+                });
+            });
+        }
+        
+        function addItineraryItem() {
+            const tripId = document.getElementById('selectedTrip').value;
+            if (!tripId) {
+                alert('Please select a trip first.');
+                return;
+            }
+            
+            const itineraryData = {
+                id: Date.now().toString(),
+                tripId: tripId,
+                date: document.getElementById('itineraryDate').value,
+                time: document.getElementById('itineraryTime').value,
+                activity: document.getElementById('itineraryActivity').value,
+                location: document.getElementById('itineraryLocation').value,
+                notes: document.getElementById('itineraryNotes').value
+            };
+            
+            if (!itineraryData.activity.trim()) {
+                alert('Please enter an activity.');
+                return;
+            }
+            
+            itineraries.push(itineraryData);
+            localStorage.setItem('itineraries', JSON.stringify(itineraries));
+            
+            clearItineraryForm();
+            loadItinerary();
+            
+            alert('Itinerary item added successfully!');
+        }
+        
+        function loadItinerary() {
+            const tripId = document.getElementById('selectedTrip').value;
+            if (!tripId) {
+                document.getElementById('itineraryList').innerHTML = '';
+                return;
+            }
+            
+            const tripItinerary = itineraries.filter(item => item.tripId === tripId);
+            const itineraryList = document.getElementById('itineraryList');
+            itineraryList.innerHTML = '';
+            
+            if (tripItinerary.length === 0) {
+                itineraryList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No itinerary items yet. Add some activities!</p>';
+                return;
+            }
+            
+            // Group by date
+            const groupedItinerary = {};
+            tripItinerary.forEach(item => {
+                if (!groupedItinerary[item.date]) {
+                    groupedItinerary[item.date] = [];
+                }
+                groupedItinerary[item.date].push(item);
+            });
+            
+            // Sort dates
+            const sortedDates = Object.keys(groupedItinerary).sort();
+            
+            sortedDates.forEach(date => {
+                const dateHeader = document.createElement('h4');
+                dateHeader.textContent = formatDate(date);
+                dateHeader.style.marginTop = '20px';
+                dateHeader.style.marginBottom = '10px';
+                dateHeader.style.color = '#667eea';
+                itineraryList.appendChild(dateHeader);
+                
+                // Sort items by time
+                const dayItems = groupedItinerary[date].sort((a, b) => a.time.localeCompare(b.time));
+                
+                dayItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'itinerary-item';
+                    itemDiv.innerHTML = `
+                        <div class="itinerary-time">${item.time}</div>
+                        <div class="itinerary-activity">${item.activity}</div>
+                        <div class="itinerary-location">📍 ${item.location}</div>
+                        ${item.notes ? `<div style="font-size: 0.9rem; color: #666; margin-top: 5px;">${item.notes}</div>` : ''}
+                        <div class="itinerary-actions">
+                            <button class="btn btn-secondary" onclick="editItineraryItem('${item.id}')">✏️ Edit</button>
+                            <button class="btn btn-danger" onclick="deleteItineraryItem('${item.id}')">🗑️ Delete</button>
+                        </div>
+                    `;
+                    itineraryList.appendChild(itemDiv);
+                });
+            });
+        }
+        
+        function addPackingItem() {
+            const tripId = document.getElementById('packingTrip').value;
+            if (!tripId) {
+                alert('Please select a trip first.');
+                return;
+            }
+            
+            const packingData = {
+                id: Date.now().toString(),
+                tripId: tripId,
+                item: document.getElementById('packingItem').value,
+                category: document.getElementById('packingCategory').value,
+                quantity: parseInt(document.getElementById('packingQuantity').value) || 1,
+                completed: false
+            };
+            
+            if (!packingData.item.trim()) {
+                alert('Please enter an item.');
+                return;
+            }
+            
+            packingLists.push(packingData);
+            localStorage.setItem('packingLists', JSON.stringify(packingLists));
+            
+            clearPackingForm();
+            loadPackingList();
+            
+            alert('Packing item added successfully!');
+        }
+        
+        function loadPackingList() {
+            const tripId = document.getElementById('packingTrip').value;
+            if (!tripId) {
+                document.getElementById('packingList').innerHTML = '';
+                return;
+            }
+            
+            const tripPacking = packingLists.filter(item => item.tripId === tripId);
+            const packingList = document.getElementById('packingList');
+            packingList.innerHTML = '';
+            
+            if (tripPacking.length === 0) {
+                packingList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No packing items yet. Start adding items!</p>';
+                return;
+            }
+            
+            // Group by category
+            const groupedPacking = {};
+            tripPacking.forEach(item => {
+                if (!groupedPacking[item.category]) {
+                    groupedPacking[item.category] = [];
+                }
+                groupedPacking[item.category].push(item);
+            });
+            
+            Object.keys(groupedPacking).forEach(category => {
+                const categoryHeader = document.createElement('h4');
+                categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryHeader.style.marginTop = '20px';
+                categoryHeader.style.marginBottom = '10px';
+                categoryHeader.style.color = '#667eea';
+                packingList.appendChild(categoryHeader);
+                
+                groupedPacking[category].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `packing-item ${item.completed ? 'completed' : ''}`;
+                    itemDiv.innerHTML = `
+                        <input type="checkbox" class="packing-checkbox" ${item.completed ? 'checked' : ''} onchange="togglePackingItem('${item.id}')">
+                        <span class="packing-name">${item.item} (${item.quantity})</span>
+                        <span class="packing-category">${item.category}</span>
+                    `;
+                    packingList.appendChild(itemDiv);
+                });
+            });
+        }
+        
+        function addBudgetItem() {
+            const tripId = document.getElementById('budgetTrip').value;
+            if (!tripId) {
+                alert('Please select a trip first.');
+                return;
+            }
+            
+            const budgetData = {
+                id: Date.now().toString(),
+                tripId: tripId,
+                category: document.getElementById('budgetCategory').value,
+                amount: parseFloat(document.getElementById('budgetAmount').value) || 0,
+                description: document.getElementById('budgetDescription').value
+            };
+            
+            if (!budgetData.description.trim() || budgetData.amount <= 0) {
+                alert('Please enter description and amount.');
+                return;
+            }
+            
+            budgets.push(budgetData);
+            localStorage.setItem('budgets', JSON.stringify(budgets));
+            
+            clearBudgetForm();
+            loadBudget();
+            
+            alert('Budget item added successfully!');
+        }
+        
+        function loadBudget() {
+            const tripId = document.getElementById('budgetTrip').value;
+            if (!tripId) {
+                document.getElementById('budgetList').innerHTML = '';
+                return;
+            }
+            
+            const tripBudget = budgets.filter(item => item.tripId === tripId);
+            const budgetList = document.getElementById('budgetList');
+            budgetList.innerHTML = '';
+            
+            if (tripBudget.length === 0) {
+                budgetList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No budget items yet. Start planning your expenses!</p>';
+                return;
+            }
+            
+            // Calculate totals
+            const totalBudget = tripBudget.reduce((sum, item) => sum + item.amount, 0);
+            const trip = trips.find(t => t.id === tripId);
+            const budgetLimit = trip ? trip.budget : 0;
+            const budgetPercentage = budgetLimit > 0 ? (totalBudget / budgetLimit) * 100 : 0;
+            
+            // Show budget summary
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'trip-summary';
+            summaryDiv.innerHTML = `
+                <h4>💰 Budget Summary</h4>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value">$${totalBudget.toFixed(2)}</div>
+                        <div class="summary-label">Total Budgeted</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">$${budgetLimit.toFixed(2)}</div>
+                        <div class="summary-label">Budget Limit</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${budgetPercentage.toFixed(1)}%</div>
+                        <div class="summary-label">Used</div>
+                    </div>
+                </div>
+                <div class="budget-progress">
+                    <div class="budget-progress-bar" style="width: ${Math.min(budgetPercentage, 100)}%"></div>
+                </div>
+            `;
+            budgetList.appendChild(summaryDiv);
+            
+            // Group by category
+            const groupedBudget = {};
+            tripBudget.forEach(item => {
+                if (!groupedBudget[item.category]) {
+                    groupedBudget[item.category] = [];
+                }
+                groupedBudget[item.category].push(item);
+            });
+            
+            Object.keys(groupedBudget).forEach(category => {
+                const categoryHeader = document.createElement('h4');
+                categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryHeader.style.marginTop = '20px';
+                categoryHeader.style.marginBottom = '10px';
+                categoryHeader.style.color = '#667eea';
+                budgetList.appendChild(categoryHeader);
+                
+                const categoryTotal = groupedBudget[category].reduce((sum, item) => sum + item.amount, 0);
+                
+                const categoryTotalDiv = document.createElement('div');
+                categoryTotalDiv.className = 'budget-item';
+                categoryTotalDiv.innerHTML = `
+                    <span class="budget-category">Total</span>
+                    <span class="budget-amount">$${categoryTotal.toFixed(2)}</span>
+                `;
+                budgetList.appendChild(categoryTotalDiv);
+                
+                groupedBudget[category].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'budget-item';
+                    itemDiv.innerHTML = `
+                        <span class="budget-category">${item.description}</span>
+                        <span class="budget-amount">$${item.amount.toFixed(2)}</span>
+                    `;
+                    budgetList.appendChild(itemDiv);
+                });
+            });
+        }
+        
+        function togglePackingItem(itemId) {
+            const item = packingLists.find(i => i.id === itemId);
+            if (item) {
+                item.completed = !item.completed;
+                localStorage.setItem('packingLists', JSON.stringify(packingLists));
+                loadPackingList();
+            }
+        }
+        
+        function filterTrips() {
+            const searchTerm = document.getElementById('tripSearch').value.toLowerCase();
+            const tripCards = document.querySelectorAll('.trip-card');
+            
+            tripCards.forEach(card => {
+                const title = card.querySelector('.trip-title').textContent.toLowerCase();
+                const destination = card.querySelector('.trip-destination').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || destination.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function filterByStatus(status) {
+            currentFilter = status;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const tripCards = document.querySelectorAll('.trip-card');
+            
+            tripCards.forEach(card => {
+                const statusElement = card.querySelector('.trip-details div:last-child');
+                const tripStatus = statusElement.textContent.toLowerCase();
+                
+                if (status === 'all' || tripStatus.includes(status)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function editTrip(tripId) {
+            const trip = trips.find(t => t.id === tripId);
+            if (trip) {
+                document.getElementById('tripTitle').value = trip.title;
+                document.getElementById('tripDestination').value = trip.destination;
+                document.getElementById('tripStartDate').value = trip.startDate;
+                document.getElementById('tripEndDate').value = trip.endDate;
+                document.getElementById('tripType').value = trip.type;
+                document.getElementById('tripBudget').value = trip.budget;
+                document.getElementById('tripDescription').value = trip.description;
+                
+                // Switch to add trip tab
+                switchTab('add-trip');
+                
+                // Update the form to show it's editing
+                const saveButton = document.querySelector('#add-trip .btn');
+                saveButton.textContent = '💾 Update Trip';
+                saveButton.onclick = () => updateTrip(tripId);
+            }
+        }
+        
+        function updateTrip(tripId) {
+            const tripIndex = trips.findIndex(t => t.id === tripId);
+            if (tripIndex !== -1) {
+                trips[tripIndex] = {
+                    ...trips[tripIndex],
+                    title: document.getElementById('tripTitle').value,
+                    destination: document.getElementById('tripDestination').value,
+                    startDate: document.getElementById('tripStartDate').value,
+                    endDate: document.getElementById('tripEndDate').value,
+                    type: document.getElementById('tripType').value,
+                    budget: parseFloat(document.getElementById('tripBudget').value) || 0,
+                    description: document.getElementById('tripDescription').value
+                };
+                
+                localStorage.setItem('trips', JSON.stringify(trips));
+                loadTrips();
+                updateTripSelects();
+                clearTripForm();
+                
+                alert('Trip updated successfully!');
+            }
+        }
+        
+        function deleteTrip(tripId) {
+            if (confirm('Are you sure you want to delete this trip? This will also delete all associated itinerary, packing, and budget items.')) {
+                trips = trips.filter(t => t.id !== tripId);
+                itineraries = itineraries.filter(i => i.tripId !== tripId);
+                packingLists = packingLists.filter(p => p.tripId !== tripId);
+                budgets = budgets.filter(b => b.tripId !== tripId);
+                
+                localStorage.setItem('trips', JSON.stringify(trips));
+                localStorage.setItem('itineraries', JSON.stringify(itineraries));
+                localStorage.setItem('packingLists', JSON.stringify(packingLists));
+                localStorage.setItem('budgets', JSON.stringify(budgets));
+                
+                loadTrips();
+                updateTripSelects();
+                
+                alert('Trip deleted successfully!');
+            }
+        }
+        
+        function clearItineraryForm() {
+            document.getElementById('itineraryDate').value = '';
+            document.getElementById('itineraryTime').value = '';
+            document.getElementById('itineraryActivity').value = '';
+            document.getElementById('itineraryLocation').value = '';
+            document.getElementById('itineraryNotes').value = '';
+        }
+        
+        function clearPackingForm() {
+            document.getElementById('packingItem').value = '';
+            document.getElementById('packingCategory').value = 'clothing';
+            document.getElementById('packingQuantity').value = '1';
+        }
+        
+        function clearBudgetForm() {
+            document.getElementById('budgetCategory').value = 'accommodation';
+            document.getElementById('budgetAmount').value = '';
+            document.getElementById('budgetDescription').value = '';
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>

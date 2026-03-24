@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short hooks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#0e0c0a;--paper:#f5f0e8;--card:#faf7f2;--border:#cdc4b4;--rust:#c1440e;--muted:#7a6e60;--shadow:rgba(14,12,10,.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;padding:24px;}
+    .wrap{max-width:720px;margin:0 auto;}
+    h1{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;}
+    h1 em{color:var(--rust);font-style:normal;}
+    .sub{color:var(--muted);font-size:.9rem;margin:8px 0 24px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px var(--shadow);}
+    .hd{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600;}
+    label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:6px;}
+    input,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);font-family:inherit;margin-bottom:12px;}
+    textarea{min-height:72px;}
+    .btn-rust{background:var(--rust);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-family:inherit;}
+    .out{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;font-size:.92rem;line-height:1.5;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Short <em>hooks</em></h1>
+    <p class="sub">Pattern-based hooks for short video or posts — no API, runs in the browser.</p>
+    <div class="card">
+      <div class="hd">Your inputs</div>
+      <label>Topic or product</label>
+      <input type="text" id="product" placeholder="e.g. budgeting app, morning routine" />
+      <label>Audience</label>
+      <input type="text" id="aud" placeholder="e.g. freelancers, parents" />
+      <label>Pain or desire (one line)</label>
+      <textarea id="pain" placeholder="What problem or want do they have?"></textarea>
+      <button type="button" class="btn-rust" id="go">Generate hooks</button>
+    </div>
+    <div class="card">
+      <div class="hd">Hooks</div>
+      <div id="hooks"></div>
+    </div>
+  </div>
+  <script>
+    function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+    document.getElementById('go').addEventListener('click',()=>{
+      const p=document.getElementById('product').value.trim()||'this';
+      const a=document.getElementById('aud').value.trim()||'you';
+      const pain=document.getElementById('pain').value.trim()||'get unstuck';
+      const hooks=[
+        `Stop scrolling — ${p} is how ${a} finally ${pain}.`,
+        `I wasted months until I tried ${p}. (${a}: watch this.)`,
+        `If you ${pain}, ${p} does one thing differently.`,
+        `Unpopular opinion: ${p} works because it’s built for ${a}.`,
+        `POV: you’re ${a} and you discover ${p}.`,
+        `3 signs you need ${p} — especially if you ${pain}.`,
+        `Nobody talks about ${p} — but ${a} are switching.`,
+        `Save this: ${p} + one habit = less chaos for ${a}.`
+      ];
+      document.getElementById('hooks').innerHTML=hooks.map(h=>`<div class="out">${esc(h)}</div>`).join('');
+    });
+  </script>
+</body>
+</html>

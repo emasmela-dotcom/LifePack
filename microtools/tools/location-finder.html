@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Location Finder - Discover Amazing Places</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .mode-selector {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mode-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mode-btn.active {
+            background: #4facfe;
+            color: white;
+            border-color: #4facfe;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .search-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-btn {
+            background: white;
+            color: #4facfe;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filter-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .filter-group select {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .locations-section {
+            margin-top: 30px;
+        }
+        
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .location-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .location-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .location-content {
+            padding: 20px;
+        }
+        
+        .location-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .location-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .location-rating {
+            background: #4facfe;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .location-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .location-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .location-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .location-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .location-tag {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .location-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.favorite {
+            background: #ff6b6b;
+        }
+        
+        .favorites-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .favorites-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .favorite-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .favorite-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .favorite-meta {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .nearby-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .nearby-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .nearby-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nearby-item:hover, .nearby-item.selected {
+            border-color: #4facfe;
+            background: #f0f8ff;
+        }
+        
+        .nearby-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .nearby-distance {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .categories-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .categories-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .category-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item:hover, .category-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .category-emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .category-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .tips {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .tips li::before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+        
+        .online-features {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .online-features h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .online-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .online-features li {
+            padding: 5px 0;
+            color: #1976d2;
+        }
+        
+        .online-features li::before {
+            content: "☁️ ";
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📍 Smart Location Finder</h1>
+            <p>Discover amazing places to visit and explore</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="mode-selector">
+                <h3>Choose Your Mode</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="locationApp.setMode('offline')">🔒 Offline Mode</button>
+                    <button class="mode-btn" onclick="locationApp.setMode('online')">☁️ Online Mode</button>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <span id="modeDescription">Your location preferences stay on your device. Completely private and secure.</span>
+                </p>
+            </div>
+            
+            <div class="search-section">
+                <h2>🔍 Find Your Perfect Place</h2>
+                <form class="search-form" id="searchForm">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for places, activities, or attractions...">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="restaurant">Restaurants</option>
+                            <option value="hotel">Hotels</option>
+                            <option value="attraction">Attractions</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="nature">Nature</option>
+                            <option value="culture">Culture</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Distance</label>
+                        <select id="distanceFilter">
+                            <option value="all">Any Distance</option>
+                            <option value="1">Within 1 mile</option>
+                            <option value="5">Within 5 miles</option>
+                            <option value="10">Within 10 miles</option>
+                            <option value="25">Within 25 miles</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Price Range</label>
+                        <select id="priceFilter">
+                            <option value="all">Any Price</option>
+                            <option value="free">Free</option>
+                            <option value="$">$ (Budget)</option>
+                            <option value="$$">$$ (Moderate)</option>
+                            <option value="$$$">$$$ (Expensive)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Rating</label>
+                        <select id="ratingFilter">
+                            <option value="all">Any Rating</option>
+                            <option value="4.5">4.5+ stars</option>
+                            <option value="4.0">4.0+ stars</option>
+                            <option value="3.5">3.5+ stars</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="locations-section">
+                <h2>📍 Discovered Locations</h2>
+                <div class="locations-grid" id="locationsGrid">
+                    <!-- Locations will be populated here -->
+                </div>
+            </div>
+            
+            <div class="favorites-section">
+                <h3>❤️ Your Favorite Places</h3>
+                <div class="favorites-grid" id="favoritesGrid">
+                    <!-- Favorites will be populated here -->
+                </div>
+            </div>
+            
+            <div class="nearby-section">
+                <h3>📍 Nearby Locations</h3>
+                <div class="nearby-grid" id="nearbyGrid">
+                    <!-- Nearby locations will be populated here -->
+                </div>
+            </div>
+            
+            <div class="categories-section">
+                <h3>🏷️ Browse by Category</h3>
+                <div class="categories-grid">
+                    <div class="category-item" onclick="locationApp.filterByCategory('restaurant')">
+                        <div class="category-emoji">🍽️</div>
+                        <div class="category-name">Restaurants</div>
+                    </div>
+                    <div class="category-item" onclick="locationApp.filterByCategory('hotel')">
+                        <div class="category-emoji">🏨</div>
+                        <div class="category-name">Hotels</div>
+                    </div>
+                    <div class="category-item" onclick="locationApp.filterByCategory('attraction')">
+                        <div class="category-emoji">🎯</div>
+                        <div class="category-name">Attractions</div>
+                    </div>
+                    <div class="category-item" onclick="locationApp.filterByCategory('shopping')">
+                        <div class="category-emoji">🛍️</div>
+                        <div class="category-name">Shopping</div>
+                    </div>
+                    <div class="category-item" onclick="locationApp.filterByCategory('entertainment')">
+                        <div class="category-emoji">🎭</div>
+                        <div class="category-name">Entertainment</div>
+                    </div>
+                    <div class="category-item" onclick="locationApp.filterByCategory('nature')">
+                        <div class="category-emoji">🌲</div>
+                        <div class="category-name">Nature</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Exploration Tips</h3>
+            <ul>
+                <li>Check opening hours before visiting any location</li>
+                <li>Read reviews to understand the atmosphere and experience</li>
+                <li>Consider weather conditions for outdoor activities</li>
+                <li>Plan your route to visit multiple nearby locations</li>
+                <li>Take photos and notes to remember your favorite spots</li>
+                <li>Support local businesses and hidden gems</li>
+            </ul>
+        </div>
+        
+        <div class="online-features" id="onlineFeatures" style="display: none;">
+            <h4>☁️ Online Features (Pro Version)</h4>
+            <ul>
+                <li>Real-time location updates and availability</li>
+                <li>GPS navigation and turn-by-turn directions</li>
+                <li>Live reviews and ratings from other users</li>
+                <li>Integration with booking and reservation systems</li>
+                <li>Social sharing and location recommendations</li>
+                <li>Advanced filtering by amenities and features</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class LocationApp {
+            constructor() {
+                this.mode = 'offline';
+                this.locations = this.loadLocations();
+                this.favorites = this.loadFavorites();
+                this.currentFilters = {
+                    category: 'all',
+                    distance: 'all',
+                    price: 'all',
+                    rating: 'all'
+                };
+                this.init();
+            }
+            
+            init() {
+                document.getElementById('searchForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.searchLocations();
+                });
+                
+                // Filter change handlers
+                document.getElementById('categoryFilter').addEventListener('change', (e) => {
+                    this.currentFilters.category = e.target.value;
+                    this.renderLocations();
+                });
+                
+                document.getElementById('distanceFilter').addEventListener('change', (e) => {
+                    this.currentFilters.distance = e.target.value;
+                    this.renderLocations();
+                });
+                
+                document.getElementById('priceFilter').addEventListener('change', (e) => {
+                    this.currentFilters.price = e.target.value;
+                    this.renderLocations();
+                });
+                
+                document.getElementById('ratingFilter').addEventListener('change', (e) => {
+                    this.currentFilters.rating = e.target.value;
+                    this.renderLocations();
+                });
+                
+                this.renderLocations();
+                this.renderFavorites();
+                this.renderNearby();
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                
+                // Update mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[onclick="locationApp.setMode('${mode}')"]`).classList.add('active');
+                
+                // Update description
+                const description = document.getElementById('modeDescription');
+                const onlineFeatures = document.getElementById('onlineFeatures');
+                
+                if (mode === 'offline') {
+                    description.textContent = 'Your location preferences stay on your device. Completely private and secure.';
+                    onlineFeatures.style.display = 'none';
+                } else {
+                    description.textContent = 'Real-time updates, GPS navigation, and live reviews.';
+                    onlineFeatures.style.display = 'block';
+                }
+            }
+            
+            filterByCategory(category) {
+                this.currentFilters.category = category;
+                document.getElementById('categoryFilter').value = category;
+                this.renderLocations();
+                
+                // Update category selection
+                document.querySelectorAll('.category-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.closest('.category-item').classList.add('active');
+            }
+            
+            searchLocations() {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                this.renderLocations(query);
+            }
+            
+            renderLocations(query = '') {
+                let filteredLocations = this.locations;
+                
+                // Apply filters
+                if (this.currentFilters.category !== 'all') {
+                    filteredLocations = filteredLocations.filter(location => 
+                        location.category === this.currentFilters.category
+                    );
+                }
+                
+                if (this.currentFilters.price !== 'all') {
+                    filteredLocations = filteredLocations.filter(location => 
+                        location.price === this.currentFilters.price
+                    );
+                }
+                
+                if (this.currentFilters.rating !== 'all') {
+                    const minRating = parseFloat(this.currentFilters.rating);
+                    filteredLocations = filteredLocations.filter(location => 
+                        location.rating >= minRating
+                    );
+                }
+                
+                // Apply search query
+                if (query) {
+                    filteredLocations = filteredLocations.filter(location => 
+                        location.name.toLowerCase().includes(query) ||
+                        location.category.toLowerCase().includes(query) ||
+                        location.description.toLowerCase().includes(query) ||
+                        location.tags.some(tag => 
+                            tag.toLowerCase().includes(query)
+                        )
+                    );
+                }
+                
+                const container = document.getElementById('locationsGrid');
+                
+                if (filteredLocations.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No locations found</h3>
+                            <p>Try adjusting your search or filters</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = filteredLocations.map(location => `
+                    <div class="location-card">
+                        <div class="location-image">${location.emoji}</div>
+                        <div class="location-content">
+                            <div class="location-header">
+                                <div class="location-title">${location.name}</div>
+                                <div class="location-rating">${location.rating} ⭐</div>
+                            </div>
+                            <div class="location-meta">
+                                <span>📍 ${location.distance}</span>
+                                <span>💰 ${location.price}</span>
+                                <span>⏰ ${location.hours}</span>
+                            </div>
+                            <div class="location-description">${location.description}</div>
+                            <div class="location-tags">
+                                ${location.tags.map(tag => `<span class="location-tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="location-actions">
+                                <button class="btn" onclick="locationApp.viewLocation('${location.id}')">View Details</button>
+                                <button class="btn favorite" onclick="locationApp.toggleFavorite('${location.id}')">
+                                    ${this.favorites.includes(location.id) ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            renderFavorites() {
+                const favoriteLocations = this.locations.filter(location => 
+                    this.favorites.includes(location.id)
+                );
+                
+                const container = document.getElementById('favoritesGrid');
+                
+                if (favoriteLocations.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No favorites yet</h3>
+                            <p>Add locations to your favorites to see them here</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = favoriteLocations.map(location => `
+                    <div class="favorite-item">
+                        <div class="favorite-name">${location.name}</div>
+                        <div class="favorite-meta">${location.category} • ${location.distance}</div>
+                    </div>
+                `).join('');
+            }
+            
+            renderNearby() {
+                const nearbyLocations = this.locations.slice(0, 4); // Show first 4 as "nearby"
+                
+                const container = document.getElementById('nearbyGrid');
+                container.innerHTML = nearbyLocations.map(location => `
+                    <div class="nearby-item" onclick="locationApp.selectNearby('${location.id}')">
+                        <div class="nearby-name">${location.name}</div>
+                        <div class="nearby-distance">${location.distance}</div>
+                    </div>
+                `).join('');
+            }
+            
+            toggleFavorite(locationId) {
+                if (this.favorites.includes(locationId)) {
+                    this.favorites = this.favorites.filter(id => id !== locationId);
+                } else {
+                    this.favorites.push(locationId);
+                }
+                
+                this.saveFavorites();
+                this.renderLocations();
+                this.renderFavorites();
+            }
+            
+            viewLocation(locationId) {
+                const location = this.locations.find(l => l.id === locationId);
+                if (!location) return;
+                
+                alert(`Location: ${location.name}\n\nCategory: ${location.category}\nPrice: ${location.price}\nRating: ${location.rating} ⭐\n\nDescription: ${location.description}\n\nHours: ${location.hours}\nDistance: ${location.distance}`);
+            }
+            
+            selectNearby(locationId) {
+                const location = this.locations.find(l => l.id === locationId);
+                if (!location) return;
+                
+                // Update nearby selection
+                document.querySelectorAll('.nearby-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                event.target.closest('.nearby-item').classList.add('selected');
+                
+                // Show location details
+                this.viewLocation(locationId);
+            }
+            
+            saveFavorites() {
+                localStorage.setItem('locationFavorites', JSON.stringify(this.favorites));
+            }
+            
+            loadFavorites() {
+                const saved = localStorage.getItem('locationFavorites');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            saveLocations() {
+                localStorage.setItem('locationFinder', JSON.stringify(this.locations));
+            }
+            
+            loadLocations() {
+                const saved = localStorage.getItem('locationFinder');
+                if (saved) return JSON.parse(saved);
+                
+                // Default locations
+                return [
+                    {
+                        id: '1',
+                        name: 'Central Park',
+                        emoji: '🌳',
+                        category: 'nature',
+                        price: 'free',
+                        rating: '4.8',
+                        distance: '0.5 miles',
+                        hours: '6 AM - 1 AM',
+                        description: 'Iconic urban park with walking trails, lakes, and recreational activities.',
+                        tags: ['park', 'outdoor', 'family-friendly']
+                    },
+                    {
+                        id: '2',
+                        name: 'Metropolitan Museum',
+                        emoji: '🏛️',
+                        category: 'attraction',
+                        price: '$$',
+                        rating: '4.9',
+                        distance: '1.2 miles',
+                        hours: '10 AM - 5 PM',
+                        description: 'World-renowned art museum with extensive collections and exhibitions.',
+                        tags: ['art', 'culture', 'educational']
+                    },
+                    {
+                        id: '3',
+                        name: 'Times Square',
+                        emoji: '🌆',
+                        category: 'attraction',
+                        price: 'free',
+                        rating: '4.5',
+                        distance: '2.1 miles',
+                        hours: '24/7',
+                        description: 'Famous commercial intersection with bright lights and entertainment.',
+                        tags: ['tourist', 'entertainment', 'shopping']
+                    },
+                    {
+                        id: '4',
+                        name: 'Brooklyn Bridge',
+                        emoji: '🌉',
+                        category: 'attraction',
+                        price: 'free',
+                        rating: '4.7',
+                        distance: '3.5 miles',
+                        hours: '24/7',
+                        description: 'Historic suspension bridge with pedestrian walkway and city views.',
+                        tags: ['historic', 'scenic', 'walking']
+                    },
+                    {
+                        id: '5',
+                        name: 'Statue of Liberty',
+                        emoji: '🗽',
+                        category: 'attraction',
+                        price: '$$$',
+                        rating: '4.6',
+                        distance: '5.2 miles',
+                        hours: '9 AM - 3:30 PM',
+                        description: 'Iconic symbol of freedom and democracy, accessible by ferry.',
+                        tags: ['historic', 'monument', 'ferry']
+                    },
+                    {
+                        id: '6',
+                        name: 'High Line Park',
+                        emoji: '🚶',
+                        category: 'nature',
+                        price: 'free',
+                        rating: '4.4',
+                        distance: '1.8 miles',
+                        hours: '7 AM - 7 PM',
+                        description: 'Elevated linear park built on former railway tracks.',
+                        tags: ['park', 'elevated', 'urban']
+                    }
+                ];
+            }
+        }
+        
+        // Initialize the location app
+        const locationApp = new LocationApp();
+    </script>
+</body>
+</html>
+

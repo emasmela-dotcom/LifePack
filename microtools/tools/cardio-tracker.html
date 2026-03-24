@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Cardio Tracker - Monitor Your Heart Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .mode-selector {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mode-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mode-btn.active {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cardio-overview {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .cardio-overview h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .cardio-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .heart-rate-zone {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .heart-rate-display {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .zone-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .zone-fat-burn { background: #28a745; color: white; }
+        .zone-cardio { background: #ffc107; color: #333; }
+        .zone-peak { background: #dc3545; color: white; }
+        
+        .add-workout-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .add-workout-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .btn.danger {
+            background: #dc3545;
+        }
+        
+        .btn.success {
+            background: #28a745;
+        }
+        
+        .workouts-section {
+            margin-top: 30px;
+        }
+        
+        .workout-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .workout-tab {
+            padding: 10px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .workout-tab.active {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .workout-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .workout-content {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .workout-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .workout-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .workout-info {
+            flex: 1;
+        }
+        
+        .workout-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .workout-details {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .workout-calories {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-right: 15px;
+        }
+        
+        .workout-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .progress-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .progress-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .progress-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .progress-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .tips {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .tips li::before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+        
+        .online-features {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .online-features h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .online-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .online-features li {
+            padding: 5px 0;
+            color: #1976d2;
+        }
+        
+        .online-features li::before {
+            content: "☁️ ";
+            margin-right: 8px;
+        }
+        
+        .heart-rate-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .heart-rate-input input {
+            flex: 1;
+        }
+        
+        .heart-rate-input button {
+            padding: 8px 16px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .workout-tabs {
+                flex-direction: column;
+            }
+            
+            .workout-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❤️ Smart Cardio Tracker</h1>
+            <p>Monitor your heart health and fitness progress</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="mode-selector">
+                <h3>Choose Your Mode</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="cardioApp.setMode('offline')">🔒 Offline Mode</button>
+                    <button class="mode-btn" onclick="cardioApp.setMode('online')">☁️ Online Mode</button>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <span id="modeDescription">Your fitness data stays on your device. Completely private and secure.</span>
+                </p>
+            </div>
+            
+            <div class="cardio-overview">
+                <h2>📊 Today's Cardio Summary</h2>
+                <div class="cardio-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Total Time</div>
+                        <div class="stat-value" id="totalTime">0 min</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Calories Burned</div>
+                        <div class="stat-value" id="totalCalories">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Workouts</div>
+                        <div class="stat-value" id="totalWorkouts">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Avg Heart Rate</div>
+                        <div class="stat-value" id="avgHeartRate">0 bpm</div>
+                    </div>
+                </div>
+                
+                <div class="heart-rate-zone">
+                    <h3>Current Heart Rate Zone</h3>
+                    <div class="heart-rate-display" id="currentHeartRate">-- bpm</div>
+                    <div class="zone-indicator" id="zoneIndicator">Enter your heart rate</div>
+                </div>
+            </div>
+            
+            <div class="add-workout-section">
+                <h2>Add New Workout</h2>
+                <form id="workoutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="workoutType">Exercise Type</label>
+                            <select id="workoutType" required>
+                                <option value="running">🏃 Running</option>
+                                <option value="cycling">🚴 Cycling</option>
+                                <option value="swimming">🏊 Swimming</option>
+                                <option value="walking">🚶 Walking</option>
+                                <option value="elliptical">🏃 Elliptical</option>
+                                <option value="rowing">🚣 Rowing</option>
+                                <option value="dancing">💃 Dancing</option>
+                                <option value="hiking">🥾 Hiking</option>
+                                <option value="other">🏃 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="workoutDuration">Duration (minutes)</label>
+                            <input type="number" id="workoutDuration" placeholder="30" step="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="workoutIntensity">Intensity Level</label>
+                            <select id="workoutIntensity" required>
+                                <option value="low">🟢 Low (Light)</option>
+                                <option value="moderate">🟡 Moderate</option>
+                                <option value="high">🔴 High (Vigorous)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="workoutDistance">Distance (miles)</label>
+                            <input type="number" id="workoutDistance" placeholder="0" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="workoutHeartRate">Average Heart Rate (bpm)</label>
+                            <input type="number" id="workoutHeartRate" placeholder="120" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="workoutNotes">Notes</label>
+                            <input type="text" id="workoutNotes" placeholder="How did it feel?">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">Add Workout</button>
+                </form>
+            </div>
+            
+            <div class="workouts-section">
+                <h2>🏃 Today's Workouts</h2>
+                <div class="workout-tabs">
+                    <button class="workout-tab active" onclick="cardioApp.showWorkouts('all')">All Workouts</button>
+                    <button class="workout-tab" onclick="cardioApp.showWorkouts('running')">🏃 Running</button>
+                    <button class="workout-tab" onclick="cardioApp.showWorkouts('cycling')">🚴 Cycling</button>
+                    <button class="workout-tab" onclick="cardioApp.showWorkouts('swimming')">🏊 Swimming</button>
+                </div>
+                
+                <div class="workout-content" id="workoutContent">
+                    <!-- Workout content will be populated here -->
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <h3>📈 Weekly Progress</h3>
+                <div class="progress-grid">
+                    <div class="progress-item">
+                        <div class="progress-label">This Week</div>
+                        <div class="progress-value" id="weeklyTime">0 min</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">Calories</div>
+                        <div class="progress-value" id="weeklyCalories">0</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">Workouts</div>
+                        <div class="progress-value" id="weeklyWorkouts">0</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">Streak</div>
+                        <div class="progress-value" id="workoutStreak">0 days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Cardio Tips</h3>
+            <ul>
+                <li>Start with 150 minutes of moderate cardio per week</li>
+                <li>Monitor your heart rate during exercise</li>
+                <li>Warm up for 5-10 minutes before intense workouts</li>
+                <li>Cool down and stretch after each session</li>
+                <li>Listen to your body and rest when needed</li>
+                <li>Track your progress to stay motivated</li>
+            </ul>
+        </div>
+        
+        <div class="online-features" id="onlineFeatures" style="display: none;">
+            <h4>☁️ Online Features (Pro Version)</h4>
+            <ul>
+                <li>GPS tracking for running and cycling routes</li>
+                <li>Heart rate zone analysis and recommendations</li>
+                <li>Social sharing and community challenges</li>
+                <li>Integration with fitness trackers and smartwatches</li>
+                <li>Advanced analytics and progress reports</li>
+                <li>Personalized workout recommendations</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class CardioApp {
+            constructor() {
+                this.mode = 'offline';
+                this.workouts = this.loadWorkouts();
+                this.currentFilter = 'all';
+                this.init();
+            }
+            
+            init() {
+                document.getElementById('workoutForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addWorkout();
+                });
+                
+                // Heart rate zone calculator
+                document.getElementById('workoutHeartRate').addEventListener('input', (e) => {
+                    this.updateHeartRateZone(parseInt(e.target.value));
+                });
+                
+                this.renderWorkouts();
+                this.updateOverview();
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                
+                // Update mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[onclick="cardioApp.setMode('${mode}')"]`).classList.add('active');
+                
+                // Update description
+                const description = document.getElementById('modeDescription');
+                const onlineFeatures = document.getElementById('onlineFeatures');
+                
+                if (mode === 'offline') {
+                    description.textContent = 'Your fitness data stays on your device. Completely private and secure.';
+                    onlineFeatures.style.display = 'none';
+                } else {
+                    description.textContent = 'GPS tracking, heart rate analysis, and advanced features.';
+                    onlineFeatures.style.display = 'block';
+                }
+            }
+            
+            addWorkout() {
+                const type = document.getElementById('workoutType').value;
+                const duration = parseInt(document.getElementById('workoutDuration').value);
+                const intensity = document.getElementById('workoutIntensity').value;
+                const distance = parseFloat(document.getElementById('workoutDistance').value) || 0;
+                const heartRate = parseInt(document.getElementById('workoutHeartRate').value) || 0;
+                const notes = document.getElementById('workoutNotes').value;
+                
+                // Calculate calories burned based on type, duration, and intensity
+                const calories = this.calculateCalories(type, duration, intensity, heartRate);
+                
+                const workout = {
+                    id: Date.now(),
+                    type,
+                    duration,
+                    intensity,
+                    distance,
+                    heartRate,
+                    calories,
+                    notes,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.workouts.push(workout);
+                this.saveWorkouts();
+                this.renderWorkouts();
+                this.updateOverview();
+                this.clearForm();
+            }
+            
+            calculateCalories(type, duration, intensity, heartRate) {
+                // Base calories per minute for different activities
+                const baseRates = {
+                    running: 10,
+                    cycling: 8,
+                    swimming: 12,
+                    walking: 4,
+                    elliptical: 9,
+                    rowing: 11,
+                    dancing: 6,
+                    hiking: 7,
+                    other: 6
+                };
+                
+                const baseRate = baseRates[type] || 6;
+                let multiplier = 1;
+                
+                // Adjust for intensity
+                if (intensity === 'low') multiplier = 0.7;
+                else if (intensity === 'moderate') multiplier = 1.0;
+                else if (intensity === 'high') multiplier = 1.3;
+                
+                // Adjust for heart rate if available
+                if (heartRate > 0) {
+                    if (heartRate > 180) multiplier *= 1.4;
+                    else if (heartRate > 160) multiplier *= 1.2;
+                    else if (heartRate > 140) multiplier *= 1.0;
+                    else if (heartRate > 120) multiplier *= 0.8;
+                    else multiplier *= 0.6;
+                }
+                
+                return Math.round(baseRate * duration * multiplier);
+            }
+            
+            updateHeartRateZone(heartRate) {
+                if (!heartRate || heartRate < 60) {
+                    document.getElementById('currentHeartRate').textContent = '-- bpm';
+                    document.getElementById('zoneIndicator').textContent = 'Enter your heart rate';
+                    document.getElementById('zoneIndicator').className = 'zone-indicator';
+                    return;
+                }
+                
+                document.getElementById('currentHeartRate').textContent = heartRate + ' bpm';
+                
+                let zone, className;
+                if (heartRate < 100) {
+                    zone = 'Resting';
+                    className = 'zone-indicator';
+                } else if (heartRate < 120) {
+                    zone = 'Fat Burn Zone';
+                    className = 'zone-indicator zone-fat-burn';
+                } else if (heartRate < 150) {
+                    zone = 'Cardio Zone';
+                    className = 'zone-indicator zone-cardio';
+                } else {
+                    zone = 'Peak Zone';
+                    className = 'zone-indicator zone-peak';
+                }
+                
+                document.getElementById('zoneIndicator').textContent = zone;
+                document.getElementById('zoneIndicator').className = className;
+            }
+            
+            showWorkouts(filter) {
+                this.currentFilter = filter;
+                
+                // Update active tab
+                document.querySelectorAll('.workout-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[onclick="cardioApp.showWorkouts('${filter}')"]`).classList.add('active');
+                
+                this.renderWorkouts();
+            }
+            
+            renderWorkouts() {
+                const today = new Date().toDateString();
+                let filteredWorkouts = this.workouts.filter(workout => 
+                    new Date(workout.createdAt).toDateString() === today
+                );
+                
+                if (this.currentFilter !== 'all') {
+                    filteredWorkouts = filteredWorkouts.filter(workout => 
+                        workout.type === this.currentFilter
+                    );
+                }
+                
+                const container = document.getElementById('workoutContent');
+                
+                if (filteredWorkouts.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No workouts today</h3>
+                            <p>Add your first workout above to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const totalTime = filteredWorkouts.reduce((sum, workout) => sum + workout.duration, 0);
+                const totalCalories = filteredWorkouts.reduce((sum, workout) => sum + workout.calories, 0);
+                
+                container.innerHTML = `
+                    <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <strong>Total: ${totalTime} minutes • ${totalCalories} calories</strong>
+                    </div>
+                    ${filteredWorkouts.map(workout => `
+                        <div class="workout-item">
+                            <div class="workout-info">
+                                <div class="workout-name">${this.getWorkoutEmoji(workout.type)} ${workout.type.charAt(0).toUpperCase() + workout.type.slice(1)}</div>
+                                <div class="workout-details">
+                                    ${workout.duration} min • ${workout.intensity} intensity • ${workout.distance > 0 ? workout.distance + ' miles' : 'No distance'} • ${workout.heartRate > 0 ? workout.heartRate + ' bpm' : 'No HR'}
+                                    ${workout.notes ? ' • ' + workout.notes : ''}
+                                </div>
+                            </div>
+                            <div class="workout-calories">${workout.calories} cal</div>
+                            <div class="workout-actions">
+                                <button class="btn-small btn-edit" onclick="cardioApp.editWorkout(${workout.id})">Edit</button>
+                                <button class="btn-small btn-delete" onclick="cardioApp.deleteWorkout(${workout.id})">Delete</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            getWorkoutEmoji(type) {
+                const emojis = {
+                    running: '🏃',
+                    cycling: '🚴',
+                    swimming: '🏊',
+                    walking: '🚶',
+                    elliptical: '🏃',
+                    rowing: '🚣',
+                    dancing: '💃',
+                    hiking: '🥾',
+                    other: '🏃'
+                };
+                return emojis[type] || '🏃';
+            }
+            
+            deleteWorkout(id) {
+                if (confirm('Are you sure you want to delete this workout?')) {
+                    this.workouts = this.workouts.filter(workout => workout.id !== id);
+                    this.saveWorkouts();
+                    this.renderWorkouts();
+                    this.updateOverview();
+                }
+            }
+            
+            editWorkout(id) {
+                const workout = this.workouts.find(w => w.id === id);
+                if (!workout) return;
+                
+                const newDuration = prompt('Edit duration (minutes):', workout.duration);
+                if (newDuration && !isNaN(newDuration)) {
+                    workout.duration = parseInt(newDuration);
+                    workout.calories = this.calculateCalories(workout.type, workout.duration, workout.intensity, workout.heartRate);
+                    this.saveWorkouts();
+                    this.renderWorkouts();
+                    this.updateOverview();
+                }
+            }
+            
+            updateOverview() {
+                const today = new Date().toDateString();
+                const todayWorkouts = this.workouts.filter(workout => 
+                    new Date(workout.createdAt).toDateString() === today
+                );
+                
+                const totalTime = todayWorkouts.reduce((sum, workout) => sum + workout.duration, 0);
+                const totalCalories = todayWorkouts.reduce((sum, workout) => sum + workout.calories, 0);
+                const avgHeartRate = todayWorkouts.length > 0 ? 
+                    Math.round(todayWorkouts.reduce((sum, workout) => sum + (workout.heartRate || 0), 0) / todayWorkouts.length) : 0;
+                
+                document.getElementById('totalTime').textContent = totalTime + ' min';
+                document.getElementById('totalCalories').textContent = totalCalories;
+                document.getElementById('totalWorkouts').textContent = todayWorkouts.length;
+                document.getElementById('avgHeartRate').textContent = avgHeartRate + ' bpm';
+                
+                // Weekly stats
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                const weeklyWorkouts = this.workouts.filter(workout => 
+                    new Date(workout.createdAt) >= weekAgo
+                );
+                
+                const weeklyTime = weeklyWorkouts.reduce((sum, workout) => sum + workout.duration, 0);
+                const weeklyCalories = weeklyWorkouts.reduce((sum, workout) => sum + workout.calories, 0);
+                
+                document.getElementById('weeklyTime').textContent = weeklyTime + ' min';
+                document.getElementById('weeklyCalories').textContent = weeklyCalories;
+                document.getElementById('weeklyWorkouts').textContent = weeklyWorkouts.length;
+                
+                // Calculate streak
+                const streak = this.calculateStreak();
+                document.getElementById('workoutStreak').textContent = streak + ' days';
+            }
+            
+            calculateStreak() {
+                let streak = 0;
+                const today = new Date();
+                
+                for (let i = 0; i < 365; i++) {
+                    const checkDate = new Date(today);
+                    checkDate.setDate(checkDate.getDate() - i);
+                    const dateString = checkDate.toDateString();
+                    
+                    const hasWorkout = this.workouts.some(workout => 
+                        new Date(workout.createdAt).toDateString() === dateString
+                    );
+                    
+                    if (hasWorkout) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                return streak;
+            }
+            
+            clearForm() {
+                document.getElementById('workoutForm').reset();
+            }
+            
+            saveWorkouts() {
+                localStorage.setItem('cardioTracker', JSON.stringify(this.workouts));
+            }
+            
+            loadWorkouts() {
+                const saved = localStorage.getItem('cardioTracker');
+                return saved ? JSON.parse(saved) : [];
+            }
+        }
+        
+        // Initialize the cardio app
+        const cardioApp = new CardioApp();
+    </script>
+</body>
+</html>
+

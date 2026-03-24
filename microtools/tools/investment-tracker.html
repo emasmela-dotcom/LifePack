@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Tracker - Monitor Your Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .investment-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+        
+        .investment-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .investment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .investment-symbol {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .investment-type {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .type-stock {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .type-bond {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .type-crypto {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .type-fund {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .investment-details {
+            margin-bottom: 15px;
+        }
+        
+        .investment-details div {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .investment-performance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .current-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+        
+        .performance-change {
+            font-weight: 600;
+        }
+        
+        .performance-positive {
+            color: #28a745;
+        }
+        
+        .performance-negative {
+            color: #dc3545;
+        }
+        
+        .investment-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .transaction-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .transaction-type {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .transaction-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .transaction-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .transaction-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .portfolio-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .portfolio-summary h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .allocation-chart {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .allocation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .allocation-category {
+            font-weight: 500;
+        }
+        
+        .allocation-percentage {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .allocation-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .allocation-progress {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .performance-chart {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .investment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Investment Tracker</h1>
+            <p>Monitor your portfolio, track performance, and make informed investment decisions. Take control of your financial future.</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('portfolio')">📊 Portfolio</div>
+                <div class="tab" onclick="switchTab('add-investment')">➕ Add Investment</div>
+                <div class="tab" onclick="switchTab('transactions')">📋 Transactions</div>
+                <div class="tab" onclick="switchTab('analytics')">📈 Analytics</div>
+            </div>
+            
+            <!-- Portfolio Tab -->
+            <div id="portfolio" class="tab-content active">
+                <div class="search-bar">
+                    <input type="text" id="investmentSearch" placeholder="Search investments..." onkeyup="filterInvestments()">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterByType('all')">All</button>
+                    <button class="filter-btn" onclick="filterByType('stock')">Stocks</button>
+                    <button class="filter-btn" onclick="filterByType('bond')">Bonds</button>
+                    <button class="filter-btn" onclick="filterByType('crypto')">Crypto</button>
+                    <button class="filter-btn" onclick="filterByType('fund')">Funds</button>
+                </div>
+                
+                <div id="investmentsGrid" class="investment-grid">
+                    <!-- Investments will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Add Investment Tab -->
+            <div id="add-investment" class="tab-content">
+                <div class="form-section">
+                    <h3>📈 Investment Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="investmentSymbol">Symbol/Ticker</label>
+                            <input type="text" id="investmentSymbol" placeholder="AAPL, MSFT, BTC, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="investmentName">Investment Name</label>
+                            <input type="text" id="investmentName" placeholder="Apple Inc., Bitcoin, etc.">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="investmentType">Type</label>
+                            <select id="investmentType">
+                                <option value="stock">Stock</option>
+                                <option value="bond">Bond</option>
+                                <option value="crypto">Cryptocurrency</option>
+                                <option value="fund">Mutual Fund/ETF</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="investmentShares">Shares/Units</label>
+                            <input type="number" id="investmentShares" min="0" step="0.000001" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="investmentPrice">Purchase Price ($)</label>
+                            <input type="number" id="investmentPrice" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="investmentDate">Purchase Date</label>
+                            <input type="date" id="investmentDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="investmentNotes">Notes</label>
+                        <textarea id="investmentNotes" rows="3" placeholder="Investment strategy, research notes, etc."></textarea>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="saveInvestment()">💾 Save Investment</button>
+                    <button class="btn btn-secondary" onclick="clearInvestmentForm()">🗑️ Clear Form</button>
+                </div>
+            </div>
+            
+            <!-- Transactions Tab -->
+            <div id="transactions" class="tab-content">
+                <div class="form-section">
+                    <h3>📋 Add Transaction</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionInvestment">Investment</label>
+                            <select id="transactionInvestment">
+                                <option value="">Choose an investment...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionType">Transaction Type</label>
+                            <select id="transactionType">
+                                <option value="buy">Buy</option>
+                                <option value="sell">Sell</option>
+                                <option value="dividend">Dividend</option>
+                                <option value="split">Stock Split</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionShares">Shares/Units</label>
+                            <input type="number" id="transactionShares" min="0" step="0.000001" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionPrice">Price per Share ($)</label>
+                            <input type="number" id="transactionPrice" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionDate">Date</label>
+                            <input type="date" id="transactionDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionFees">Fees ($)</label>
+                            <input type="number" id="transactionFees" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionNotes">Notes</label>
+                        <textarea id="transactionNotes" rows="2" placeholder="Transaction details, strategy, etc."></textarea>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="addTransaction()">➕ Add Transaction</button>
+                    <button class="btn btn-secondary" onclick="clearTransactionForm()">🗑️ Clear Form</button>
+                </div>
+                
+                <div id="transactionsList">
+                    <!-- Transactions will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalValue">$0</div>
+                        <div class="stat-label">Total Portfolio Value</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalGain">$0</div>
+                        <div class="stat-label">Total Gain/Loss</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalReturn">0%</div>
+                        <div class="stat-label">Total Return</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalInvestments">0</div>
+                        <div class="stat-label">Total Investments</div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-summary">
+                    <h4>📊 Portfolio Allocation</h4>
+                    <div id="allocationChart">
+                        <!-- Allocation chart will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="performance-chart">
+                    <h4>📈 Performance Overview</h4>
+                    <div class="chart-placeholder">
+                        Performance chart would be displayed here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let investments = JSON.parse(localStorage.getItem('investments') || '[]');
+        let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        let currentFilter = 'all';
+        
+        // Initialize
+        loadInvestments();
+        updateInvestmentSelects();
+        updateAnalytics();
+        
+        // Set current date
+        document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'analytics') {
+                updateAnalytics();
+            } else if (tabName === 'transactions') {
+                loadTransactions();
+            }
+        }
+        
+        function saveInvestment() {
+            const investmentData = {
+                id: Date.now().toString(),
+                symbol: document.getElementById('investmentSymbol').value,
+                name: document.getElementById('investmentName').value,
+                type: document.getElementById('investmentType').value,
+                shares: parseFloat(document.getElementById('investmentShares').value) || 0,
+                price: parseFloat(document.getElementById('investmentPrice').value) || 0,
+                date: document.getElementById('investmentDate').value,
+                notes: document.getElementById('investmentNotes').value,
+                currentPrice: parseFloat(document.getElementById('investmentPrice').value) || 0,
+                dateAdded: new Date().toISOString()
+            };
+            
+            if (!investmentData.symbol.trim() || !investmentData.name.trim()) {
+                alert('Please enter symbol and name.');
+                return;
+            }
+            
+            investments.push(investmentData);
+            localStorage.setItem('investments', JSON.stringify(investments));
+            
+            clearInvestmentForm();
+            loadInvestments();
+            updateInvestmentSelects();
+            updateAnalytics();
+            
+            alert('Investment saved successfully!');
+        }
+        
+        function clearInvestmentForm() {
+            document.getElementById('investmentSymbol').value = '';
+            document.getElementById('investmentName').value = '';
+            document.getElementById('investmentType').value = 'stock';
+            document.getElementById('investmentShares').value = '';
+            document.getElementById('investmentPrice').value = '';
+            document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('investmentNotes').value = '';
+        }
+        
+        function loadInvestments() {
+            const investmentsGrid = document.getElementById('investmentsGrid');
+            investmentsGrid.innerHTML = '';
+            
+            investments.forEach(investment => {
+                const currentValue = investment.shares * investment.currentPrice;
+                const totalCost = investment.shares * investment.price;
+                const gainLoss = currentValue - totalCost;
+                const returnPercent = totalCost > 0 ? (gainLoss / totalCost) * 100 : 0;
+                
+                const investmentCard = document.createElement('div');
+                investmentCard.className = 'investment-card';
+                investmentCard.innerHTML = `
+                    <div class="investment-header">
+                        <div class="investment-symbol">${investment.symbol}</div>
+                        <div class="investment-type type-${investment.type}">${investment.type.toUpperCase()}</div>
+                    </div>
+                    <div class="investment-details">
+                        <div>${investment.name}</div>
+                        <div>Shares: ${investment.shares.toFixed(6)}</div>
+                        <div>Avg Price: $${investment.price.toFixed(2)}</div>
+                        <div>Current: $${investment.currentPrice.toFixed(2)}</div>
+                    </div>
+                    <div class="investment-performance">
+                        <div class="current-value">$${currentValue.toFixed(2)}</div>
+                        <div class="performance-change ${gainLoss >= 0 ? 'performance-positive' : 'performance-negative'}">
+                            ${gainLoss >= 0 ? '+' : ''}$${gainLoss.toFixed(2)} (${returnPercent.toFixed(2)}%)
+                        </div>
+                    </div>
+                    <div class="investment-actions">
+                        <button class="btn btn-secondary" onclick="editInvestment('${investment.id}')">✏️ Edit</button>
+                        <button class="btn btn-warning" onclick="updatePrice('${investment.id}')">💰 Update Price</button>
+                        <button class="btn btn-danger" onclick="deleteInvestment('${investment.id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                investmentsGrid.appendChild(investmentCard);
+            });
+        }
+        
+        function updateInvestmentSelects() {
+            const select = document.getElementById('transactionInvestment');
+            select.innerHTML = '<option value="">Choose an investment...</option>';
+            investments.forEach(investment => {
+                const option = document.createElement('option');
+                option.value = investment.id;
+                option.textContent = `${investment.symbol} - ${investment.name}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function addTransaction() {
+            const investmentId = document.getElementById('transactionInvestment').value;
+            if (!investmentId) {
+                alert('Please select an investment first.');
+                return;
+            }
+            
+            const transactionData = {
+                id: Date.now().toString(),
+                investmentId: investmentId,
+                type: document.getElementById('transactionType').value,
+                shares: parseFloat(document.getElementById('transactionShares').value) || 0,
+                price: parseFloat(document.getElementById('transactionPrice').value) || 0,
+                date: document.getElementById('transactionDate').value,
+                fees: parseFloat(document.getElementById('transactionFees').value) || 0,
+                notes: document.getElementById('transactionNotes').value,
+                dateAdded: new Date().toISOString()
+            };
+            
+            if (!transactionData.shares || !transactionData.price) {
+                alert('Please enter shares and price.');
+                return;
+            }
+            
+            transactions.push(transactionData);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            // Update investment if it's a buy/sell
+            if (transactionData.type === 'buy' || transactionData.type === 'sell') {
+                updateInvestmentFromTransaction(transactionData);
+            }
+            
+            clearTransactionForm();
+            loadTransactions();
+            loadInvestments();
+            updateAnalytics();
+            
+            alert('Transaction added successfully!');
+        }
+        
+        function updateInvestmentFromTransaction(transactionData) {
+            const investment = investments.find(i => i.id === transactionData.investmentId);
+            if (investment) {
+                if (transactionData.type === 'buy') {
+                    // Update average price and shares
+                    const totalCost = (investment.shares * investment.price) + (transactionData.shares * transactionData.price);
+                    const totalShares = investment.shares + transactionData.shares;
+                    investment.price = totalShares > 0 ? totalCost / totalShares : investment.price;
+                    investment.shares = totalShares;
+                } else if (transactionData.type === 'sell') {
+                    // Reduce shares
+                    investment.shares = Math.max(0, investment.shares - transactionData.shares);
+                }
+                
+                localStorage.setItem('investments', JSON.stringify(investments));
+            }
+        }
+        
+        function loadTransactions() {
+            const transactionsList = document.getElementById('transactionsList');
+            transactionsList.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                transactionsList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No transactions yet. Add some transactions!</p>';
+                return;
+            }
+            
+            // Sort by date (newest first)
+            const sortedTransactions = transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedTransactions.forEach(transaction => {
+                const investment = investments.find(i => i.id === transaction.investmentId);
+                const transactionDiv = document.createElement('div');
+                transactionDiv.className = 'transaction-item';
+                transactionDiv.innerHTML = `
+                    <div class="transaction-header">
+                        <div class="transaction-type">${transaction.type.toUpperCase()}</div>
+                        <div class="transaction-date">${formatDate(transaction.date)}</div>
+                    </div>
+                    <div class="transaction-details">
+                        <div><strong>Investment:</strong> ${investment ? `${investment.symbol} - ${investment.name}` : 'Unknown'}</div>
+                        <div><strong>Shares:</strong> ${transaction.shares.toFixed(6)}</div>
+                        <div><strong>Price:</strong> $${transaction.price.toFixed(2)}</div>
+                        <div><strong>Total:</strong> $${(transaction.shares * transaction.price).toFixed(2)}</div>
+                        ${transaction.fees > 0 ? `<div><strong>Fees:</strong> $${transaction.fees.toFixed(2)}</div>` : ''}
+                        ${transaction.notes ? `<div><strong>Notes:</strong> ${transaction.notes}</div>` : ''}
+                    </div>
+                    <div class="transaction-actions">
+                        <button class="btn btn-secondary" onclick="editTransaction('${transaction.id}')">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteTransaction('${transaction.id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                transactionsList.appendChild(transactionDiv);
+            });
+        }
+        
+        function updateAnalytics() {
+            const totalValue = investments.reduce((sum, investment) => sum + (investment.shares * investment.currentPrice), 0);
+            const totalCost = investments.reduce((sum, investment) => sum + (investment.shares * investment.price), 0);
+            const totalGain = totalValue - totalCost;
+            const totalReturn = totalCost > 0 ? (totalGain / totalCost) * 100 : 0;
+            
+            document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
+            document.getElementById('totalGain').textContent = `${totalGain >= 0 ? '+' : ''}$${totalGain.toFixed(2)}`;
+            document.getElementById('totalReturn').textContent = `${totalReturn >= 0 ? '+' : ''}${totalReturn.toFixed(2)}%`;
+            document.getElementById('totalInvestments').textContent = investments.length;
+            
+            // Update allocation chart
+            updateAllocationChart();
+        }
+        
+        function updateAllocationChart() {
+            const allocationChart = document.getElementById('allocationChart');
+            allocationChart.innerHTML = '';
+            
+            // Group by type
+            const typeTotals = {};
+            investments.forEach(investment => {
+                const value = investment.shares * investment.currentPrice;
+                if (!typeTotals[investment.type]) {
+                    typeTotals[investment.type] = 0;
+                }
+                typeTotals[investment.type] += value;
+            });
+            
+            const totalValue = Object.values(typeTotals).reduce((sum, value) => sum + value, 0);
+            
+            Object.entries(typeTotals).forEach(([type, value]) => {
+                const percentage = totalValue > 0 ? (value / totalValue) * 100 : 0;
+                
+                const allocationItem = document.createElement('div');
+                allocationItem.className = 'allocation-item';
+                allocationItem.innerHTML = `
+                    <span class="allocation-category">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                    <span class="allocation-percentage">${percentage.toFixed(1)}%</span>
+                    <div class="allocation-bar">
+                        <div class="allocation-progress" style="width: ${percentage}%"></div>
+                    </div>
+                `;
+                allocationChart.appendChild(allocationItem);
+            });
+        }
+        
+        function filterInvestments() {
+            const searchTerm = document.getElementById('investmentSearch').value.toLowerCase();
+            const investmentCards = document.querySelectorAll('.investment-card');
+            
+            investmentCards.forEach(card => {
+                const symbol = card.querySelector('.investment-symbol').textContent.toLowerCase();
+                const details = card.querySelector('.investment-details').textContent.toLowerCase();
+                
+                if (symbol.includes(searchTerm) || details.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function filterByType(type) {
+            currentFilter = type;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const investmentCards = document.querySelectorAll('.investment-card');
+            
+            investmentCards.forEach(card => {
+                const typeElement = card.querySelector('.investment-type');
+                const investmentType = typeElement.textContent.toLowerCase();
+                
+                if (type === 'all' || investmentType.includes(type)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function editInvestment(investmentId) {
+            const investment = investments.find(i => i.id === investmentId);
+            if (investment) {
+                document.getElementById('investmentSymbol').value = investment.symbol;
+                document.getElementById('investmentName').value = investment.name;
+                document.getElementById('investmentType').value = investment.type;
+                document.getElementById('investmentShares').value = investment.shares;
+                document.getElementById('investmentPrice').value = investment.price;
+                document.getElementById('investmentDate').value = investment.date;
+                document.getElementById('investmentNotes').value = investment.notes;
+                
+                // Switch to add investment tab
+                switchTab('add-investment');
+                
+                // Update the form to show it's editing
+                const saveButton = document.querySelector('#add-investment .btn');
+                saveButton.textContent = '💾 Update Investment';
+                saveButton.onclick = () => updateInvestment(investmentId);
+            }
+        }
+        
+        function updateInvestment(investmentId) {
+            const investmentIndex = investments.findIndex(i => i.id === investmentId);
+            if (investmentIndex !== -1) {
+                investments[investmentIndex] = {
+                    ...investments[investmentIndex],
+                    symbol: document.getElementById('investmentSymbol').value,
+                    name: document.getElementById('investmentName').value,
+                    type: document.getElementById('investmentType').value,
+                    shares: parseFloat(document.getElementById('investmentShares').value) || 0,
+                    price: parseFloat(document.getElementById('investmentPrice').value) || 0,
+                    date: document.getElementById('investmentDate').value,
+                    notes: document.getElementById('investmentNotes').value
+                };
+                
+                localStorage.setItem('investments', JSON.stringify(investments));
+                loadInvestments();
+                updateInvestmentSelects();
+                updateAnalytics();
+                clearInvestmentForm();
+                
+                alert('Investment updated successfully!');
+            }
+        }
+        
+        function updatePrice(investmentId) {
+            const newPrice = prompt('Enter new current price:');
+            if (newPrice && !isNaN(parseFloat(newPrice))) {
+                const investment = investments.find(i => i.id === investmentId);
+                if (investment) {
+                    investment.currentPrice = parseFloat(newPrice);
+                    localStorage.setItem('investments', JSON.stringify(investments));
+                    loadInvestments();
+                    updateAnalytics();
+                    
+                    alert('Price updated successfully!');
+                }
+            }
+        }
+        
+        function deleteInvestment(investmentId) {
+            if (confirm('Are you sure you want to delete this investment? This will also delete all associated transactions.')) {
+                investments = investments.filter(i => i.id !== investmentId);
+                transactions = transactions.filter(t => t.investmentId !== investmentId);
+                
+                localStorage.setItem('investments', JSON.stringify(investments));
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+                
+                loadInvestments();
+                updateInvestmentSelects();
+                updateAnalytics();
+                
+                alert('Investment deleted successfully!');
+            }
+        }
+        
+        function clearTransactionForm() {
+            document.getElementById('transactionInvestment').value = '';
+            document.getElementById('transactionType').value = 'buy';
+            document.getElementById('transactionShares').value = '';
+            document.getElementById('transactionPrice').value = '';
+            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('transactionFees').value = '';
+            document.getElementById('transactionNotes').value = '';
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>

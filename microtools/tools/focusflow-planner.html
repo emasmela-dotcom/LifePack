@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily priorities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#0e0c0a;--paper:#f5f0e8;--card:#faf7f2;--border:#cdc4b4;--rust:#c1440e;--muted:#7a6e60;--shadow:rgba(14,12,10,.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;padding:24px;}
+    .wrap{max-width:720px;margin:0 auto;}
+    h1{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;}
+    h1 em{color:var(--rust);font-style:normal;}
+    .sub{color:var(--muted);font-size:.9rem;margin:8px 0 24px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px var(--shadow);}
+    .hd{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+    input,select,button{font-family:inherit;font-size:.9rem;border-radius:8px;border:1px solid var(--border);padding:10px 12px;background:#fff;}
+    input[type="text"]{flex:1;min-width:200px;}
+    .btn-rust{background:var(--rust);color:#fff;border:none;font-weight:700;cursor:pointer;}
+    .btn-rust:hover{filter:brightness(1.05);}
+    .task{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--border);}
+    .task:last-child{border-bottom:none;}
+    .task.done{opacity:.55;text-decoration:line-through;}
+    .pri{font-size:.65rem;text-transform:uppercase;padding:3px 8px;border-radius:4px;font-weight:700;}
+    .pri.h{background:#fee2e2;color:#991b1b;}
+    .pri.m{background:#fef3c7;color:#92400e;}
+    .pri.l{background:#e0e7ff;color:#3730a3;}
+    .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;}
+    .recap{font-size:.92rem;line-height:1.6;color:var(--ink);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Daily <em>priorities</em></h1>
+    <p class="sub">Today’s priorities — data stays on this device only.</p>
+    <div class="card">
+      <div class="hd">Add task</div>
+      <div class="row">
+        <input type="text" id="tText" placeholder="What needs doing?" />
+        <select id="tPri"><option value="h">High</option><option value="m">Medium</option><option value="l">Low</option></select>
+        <button type="button" class="btn-rust" id="tAdd">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hd">Your list</div>
+      <div id="list"></div>
+    </div>
+    <div class="card">
+      <div class="hd">Quick recap</div>
+      <p class="recap" id="recap"></p>
+    </div>
+  </div>
+  <script>
+    const K='focusflow_tasks_v1';
+    const order={h:0,m:1,l:2};
+    function load(){try{return JSON.parse(localStorage.getItem(K))||[];}catch{return[];}}
+    function save(x){localStorage.setItem(K,JSON.stringify(x));}
+    function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+    function render(){
+      const all=load().slice().sort((a,b)=>order[a.pri]-order[b.pri]);
+      const el=document.getElementById('list');
+      if(!all.length)el.innerHTML='<p style="color:var(--muted);padding:12px;">No tasks yet.</p>';
+      else{
+        el.innerHTML=all.map(t=>`
+          <div class="task ${t.done?'done':''}">
+            <input type="checkbox" ${t.done?'checked':''} data-id="${t.id}" />
+            <span class="pri ${t.pri}">${t.pri==='h'?'High':t.pri==='m'?'Med':'Low'}</span>
+            <span style="flex:1">${esc(t.text)}</span>
+            <button type="button" class="del" data-del="${t.id}">×</button>
+          </div>`).join('');
+        el.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+          cb.addEventListener('change',()=>{
+            const x=load(),i=x.findIndex(y=>y.id===cb.dataset.id);
+            if(i>=0){x[i].done=cb.checked;save(x);render();}
+          });
+        });
+        el.querySelectorAll('[data-del]').forEach(b=>{
+          b.addEventListener('click',()=>{save(load().filter(y=>y.id!==b.dataset.del));render();});
+        });
+      }
+      const x=load(),done=x.filter(t=>t.done).length;
+      document.getElementById('recap').textContent=x.length?`${x.length} task(s), ${done} done. Tackle High items first when energy is best.`:'Add tasks to see a recap.';
+    }
+    document.getElementById('tAdd').addEventListener('click',()=>{
+      const text=document.getElementById('tText').value.trim();if(!text)return;
+      const x=load();
+      x.push({id:crypto.randomUUID(),text,pri:document.getElementById('tPri').value,done:false,created:new Date().toISOString()});
+      save(x);document.getElementById('tText').value='';render();
+    });
+    render();
+  </script>
+</body>
+</html>

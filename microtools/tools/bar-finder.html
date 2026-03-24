@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Finder - Find the Perfect Bar Near You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .search-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .filter-group select {
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .results-section {
+            margin-bottom: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            padding: 8px 15px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-btn.active {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .bars-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .bar-card {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar-card:hover {
+            border-color: #e74c3c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .bar-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .bar-type {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .bar-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-icon {
+            font-size: 1.2rem;
+        }
+
+        .bar-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .directions-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .favorite-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .call-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .menu-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .offline-mode {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .offline-mode h3 {
+            margin-bottom: 10px;
+        }
+
+        .offline-mode p {
+            opacity: 0.9;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .favorites-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .favorites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .favorites-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .favorite-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .favorite-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .favorite-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .favorite-type {
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .remove-favorite {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .demo-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .special-features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .bar-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .bar-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍻 Smart Bar Finder</h1>
+            <p>Find the perfect bar, speakeasy, salon, tavern, or brewery near you!</p>
+        </div>
+
+        <div class="main-content">
+            <button class="demo-btn" onclick="loadDemoData()">🚀 Try Demo</button>
+
+            <div class="offline-mode">
+                <h3>🔒 Privacy First</h3>
+                <p>Your location and search data stays on your device. No tracking, no ads, just great bars!</p>
+            </div>
+
+            <div class="search-section">
+                <div class="search-row">
+                    <div class="form-group">
+                        <label for="location">📍 Your Location</label>
+                        <input type="text" id="location" placeholder="Enter city, state or zip code">
+                    </div>
+                    <div class="form-group">
+                        <label for="barType">🍺 Bar Type</label>
+                        <select id="barType">
+                            <option value="all">All Types</option>
+                            <option value="bar">Traditional Bar</option>
+                            <option value="speakeasy">Speakeasy</option>
+                            <option value="salon">Wine Salon</option>
+                            <option value="tavern">Tavern</option>
+                            <option value="brewery">Brewery</option>
+                            <option value="distillery">Distillery</option>
+                            <option value="wine">Wine Bar</option>
+                            <option value="rooftop">Rooftop Bar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="radius">🔍 Search Radius</label>
+                        <select id="radius">
+                            <option value="5">5 miles</option>
+                            <option value="10" selected>10 miles</option>
+                            <option value="25">25 miles</option>
+                            <option value="50">50 miles</option>
+                        </select>
+                    </div>
+                    <button class="search-btn" onclick="searchBars()">🔍 Find Bars</button>
+                </div>
+            </div>
+
+            <div class="filters-section">
+                <h3>🎯 Advanced Filters</h3>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="atmosphere">🎭 Atmosphere</label>
+                        <select id="atmosphere">
+                            <option value="any">Any Atmosphere</option>
+                            <option value="loud">Loud & Energetic</option>
+                            <option value="quiet">Quiet & Intimate</option>
+                            <option value="romantic">Romantic</option>
+                            <option value="party">Party Scene</option>
+                            <option value="business">Business Casual</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="specialty">🍸 Specialty</label>
+                        <select id="specialty">
+                            <option value="any">Any Specialty</option>
+                            <option value="cocktails">Craft Cocktails</option>
+                            <option value="wine">Wine Selection</option>
+                            <option value="beer">Craft Beer</option>
+                            <option value="whiskey">Whiskey Bar</option>
+                            <option value="gin">Gin Bar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="priceRange">💰 Price Range</label>
+                        <select id="priceRange">
+                            <option value="any">Any Price</option>
+                            <option value="budget">Budget ($)</option>
+                            <option value="mid">Mid-Range ($$)</option>
+                            <option value="upscale">Upscale ($$$)</option>
+                            <option value="luxury">Luxury ($$$$)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="features">⭐ Features</label>
+                        <select id="features">
+                            <option value="any">Any Features</option>
+                            <option value="happyhour">Happy Hour</option>
+                            <option value="livemusic">Live Music</option>
+                            <option value="outdoor">Outdoor Seating</option>
+                            <option value="food">Great Food</option>
+                            <option value="private">Private Events</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="special-features">
+                <h3>🌟 Special Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🕐</div>
+                        <div class="feature-title">Happy Hour Finder</div>
+                        <div class="feature-desc">Find the best deals and times</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎵</div>
+                        <div class="feature-title">Live Music</div>
+                        <div class="feature-desc">Bars with bands, DJs, karaoke</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🍽️</div>
+                        <div class="feature-title">Food Pairing</div>
+                        <div class="feature-desc">Bars with great food menus</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌅</div>
+                        <div class="feature-title">Outdoor Seating</div>
+                        <div class="feature-desc">Patios, rooftops, beer gardens</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3>🍻 Your Bar Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="barsVisited">0</div>
+                        <div class="stat-label">Bars Visited</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="favoriteBars">0</div>
+                        <div class="stat-label">Favorite Bars</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="happyHours">0</div>
+                        <div class="stat-label">Happy Hours Found</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="moneySaved">$0</div>
+                        <div class="stat-label">Money Saved</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="favorites-section">
+                <div class="favorites-header">
+                    <h3>⭐ Your Favorite Bars</h3>
+                    <span id="favoritesCount">0 favorites</span>
+                </div>
+                <div class="favorites-list" id="favoritesList">
+                    <p style="text-align: center; color: #666; padding: 20px;">No favorite bars yet. Add some by clicking the ⭐ button!</p>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount">No results yet</div>
+                    <div class="sort-options">
+                        <button class="sort-btn active" onclick="sortBy('distance')">Distance</button>
+                        <button class="sort-btn" onclick="sortBy('rating')">Rating</button>
+                        <button class="sort-btn" onclick="sortBy('price')">Price</button>
+                    </div>
+                </div>
+                <div class="bars-grid" id="barsGrid">
+                    <div class="no-results">
+                        <h3>🍻 Ready to Find Great Bars?</h3>
+                        <p>Enter your location above to discover amazing bars, speakeasies, salons, and more!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bars = [];
+        let favorites = JSON.parse(localStorage.getItem('bar_favorites') || '[]');
+        let currentSort = 'distance';
+
+        // Demo data for testing
+        const demoBars = [
+            {
+                name: "The Hidden Speakeasy",
+                type: "speakeasy",
+                address: "123 Secret Alley, Downtown",
+                distance: 0.5,
+                rating: 4.8,
+                price: "$$$",
+                phone: "(555) 123-4567",
+                hours: "6 PM - 2 AM",
+                atmosphere: "quiet",
+                specialty: "cocktails",
+                features: ["Password Required", "Craft Cocktails", "Live Jazz"],
+                happyHour: "5-7 PM",
+                lastUpdated: "1 hour ago"
+            },
+            {
+                name: "Brewmaster's Tavern",
+                type: "tavern",
+                address: "456 Oak St, Midtown",
+                distance: 1.2,
+                rating: 4.5,
+                price: "$$",
+                phone: "(555) 234-5678",
+                hours: "11 AM - 12 AM",
+                atmosphere: "loud",
+                specialty: "beer",
+                features: ["Craft Beer", "Pub Food", "Pool Tables"],
+                happyHour: "3-6 PM",
+                lastUpdated: "2 hours ago"
+            },
+            {
+                name: "Vintage Wine Salon",
+                type: "salon",
+                address: "789 Pine Ave, Uptown",
+                distance: 2.1,
+                rating: 4.7,
+                price: "$$$$",
+                phone: "(555) 345-6789",
+                hours: "4 PM - 11 PM",
+                atmosphere: "romantic",
+                specialty: "wine",
+                features: ["Wine Tastings", "Sommelier", "Cheese Pairings"],
+                happyHour: "4-6 PM",
+                lastUpdated: "30 minutes ago"
+            },
+            {
+                name: "Skyline Rooftop",
+                type: "rooftop",
+                address: "321 High Rise, Eastside",
+                distance: 3.5,
+                rating: 4.3,
+                price: "$$$",
+                phone: "(555) 456-7890",
+                hours: "5 PM - 1 AM",
+                atmosphere: "party",
+                specialty: "cocktails",
+                features: ["City Views", "Outdoor Seating", "DJ Nights"],
+                happyHour: "5-7 PM",
+                lastUpdated: "45 minutes ago"
+            },
+            {
+                name: "Craft Distillery Bar",
+                type: "distillery",
+                address: "654 Industrial Blvd, Westside",
+                distance: 4.2,
+                rating: 4.6,
+                price: "$$$",
+                phone: "(555) 567-8901",
+                hours: "3 PM - 12 AM",
+                atmosphere: "business",
+                specialty: "whiskey",
+                features: ["Tours", "Tastings", "Private Events"],
+                happyHour: "3-5 PM",
+                lastUpdated: "1 hour ago"
+            },
+            {
+                name: "The Local Brewery",
+                type: "brewery",
+                address: "987 Beer St, Brewery District",
+                distance: 5.1,
+                rating: 4.4,
+                price: "$$",
+                phone: "(555) 678-9012",
+                hours: "12 PM - 10 PM",
+                atmosphere: "loud",
+                specialty: "beer",
+                features: ["Brewery Tours", "Food Trucks", "Live Music"],
+                happyHour: "All Day Sunday",
+                lastUpdated: "2 hours ago"
+            }
+        ];
+
+        function loadDemoData() {
+            bars = [...demoBars];
+            displayResults();
+            updateStats();
+        }
+
+        function searchBars() {
+            const location = document.getElementById('location').value;
+            const barType = document.getElementById('barType').value;
+            const radius = document.getElementById('radius').value;
+
+            if (!location.trim()) {
+                alert('Please enter your location to search for bars.');
+                return;
+            }
+
+            // Simulate API call with demo data
+            setTimeout(() => {
+                bars = [...demoBars];
+                displayResults();
+                updateStats();
+            }, 1000);
+        }
+
+        function displayResults() {
+            const container = document.getElementById('barsGrid');
+            const count = document.getElementById('resultsCount');
+            
+            if (bars.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>🍻 Ready to Find Great Bars?</h3>
+                        <p>Enter your location above to discover amazing bars, speakeasies, salons, and more!</p>
+                    </div>
+                `;
+                count.textContent = 'No results yet';
+                return;
+            }
+
+            count.textContent = `${bars.length} bars found`;
+
+            container.innerHTML = bars.map(bar => `
+                <div class="bar-card" onclick="selectBar('${bar.name}')">
+                    <div class="bar-header">
+                        <div>
+                            <div class="bar-name">${bar.name}</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">${bar.address}</div>
+                        </div>
+                        <div class="bar-type">${bar.type.toUpperCase()}</div>
+                    </div>
+                    <div class="bar-details">
+                        <div class="detail-item">
+                            <span class="detail-icon">📏</span>
+                            <span>${bar.distance} miles away</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">⭐</span>
+                            <span>${bar.rating}/5.0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">💰</span>
+                            <span>${bar.price}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📞</span>
+                            <span>${bar.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">🕒</span>
+                            <span>${bar.hours}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">🍻</span>
+                            <span>Happy Hour: ${bar.happyHour}</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Features:</strong> ${bar.features.join(', ')}
+                    </div>
+                    <div class="bar-actions">
+                        <button class="action-btn directions-btn" onclick="getDirections('${bar.name}', '${bar.address}')">
+                            🗺️ Directions
+                        </button>
+                        <button class="action-btn favorite-btn" onclick="toggleFavorite('${bar.name}', '${bar.address}', '${bar.type}')">
+                            ⭐ Favorite
+                        </button>
+                        <button class="action-btn call-btn" onclick="callBar('${bar.phone}')">
+                            📞 Call
+                        </button>
+                        <button class="action-btn menu-btn" onclick="viewMenu('${bar.name}')">
+                            📋 Menu
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sortBy(type) {
+            currentSort = type;
+            
+            // Update active button
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'distance') {
+                bars.sort((a, b) => a.distance - b.distance);
+            } else if (type === 'rating') {
+                bars.sort((a, b) => b.rating - a.rating);
+            } else if (type === 'price') {
+                const priceOrder = { '$': 1, '$$': 2, '$$$': 3, '$$$$': 4 };
+                bars.sort((a, b) => priceOrder[a.price] - priceOrder[b.price]);
+            }
+
+            displayResults();
+        }
+
+        function selectBar(name) {
+            const bar = bars.find(b => b.name === name);
+            if (bar) {
+                alert(`Selected: ${bar.name}\nType: ${bar.type}\nRating: ${bar.rating}/5.0\nDistance: ${bar.distance} miles\nHappy Hour: ${bar.happyHour}`);
+            }
+        }
+
+        function getDirections(name, address) {
+            alert(`Getting directions to ${name} at ${address}\n\nThis would open your default maps app with the route.`);
+        }
+
+        function callBar(phone) {
+            alert(`Calling ${phone}\n\nThis would open your phone app to call the bar.`);
+        }
+
+        function viewMenu(name) {
+            alert(`Viewing menu for ${name}\n\nThis would show the bar's menu and drink specials.`);
+        }
+
+        function toggleFavorite(name, address, type) {
+            const existingIndex = favorites.findIndex(f => f.name === name);
+            
+            if (existingIndex >= 0) {
+                favorites.splice(existingIndex, 1);
+                alert(`Removed ${name} from favorites`);
+            } else {
+                favorites.push({ name, address, type, dateAdded: new Date().toISOString() });
+                alert(`Added ${name} to favorites`);
+            }
+            
+            localStorage.setItem('bar_favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function updateFavorites() {
+            const container = document.getElementById('favoritesList');
+            const count = document.getElementById('favoritesCount');
+            
+            count.textContent = `${favorites.length} favorites`;
+            
+            if (favorites.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No favorite bars yet. Add some by clicking the ⭐ button!</p>';
+                return;
+            }
+            
+            container.innerHTML = favorites.map(fav => `
+                <div class="favorite-item">
+                    <div class="favorite-info">
+                        <div>
+                            <div class="favorite-name">${fav.name}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${fav.address}</div>
+                        </div>
+                        <div class="favorite-type">${fav.type.toUpperCase()}</div>
+                    </div>
+                    <button class="remove-favorite" onclick="removeFavorite('${fav.name}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeFavorite(name) {
+            favorites = favorites.filter(f => f.name !== name);
+            localStorage.setItem('bar_favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function updateStats() {
+            // Calculate stats (demo calculation)
+            const barsVisited = favorites.length;
+            const favoriteBars = favorites.length;
+            const happyHours = bars.filter(b => b.happyHour).length;
+            const moneySaved = favorites.length * 15; // $15 saved per favorite bar
+            
+            document.getElementById('barsVisited').textContent = barsVisited;
+            document.getElementById('favoriteBars').textContent = favoriteBars;
+            document.getElementById('happyHours').textContent = happyHours;
+            document.getElementById('moneySaved').textContent = `$${moneySaved}`;
+        }
+
+        // Initialize
+        updateFavorites();
+        updateStats();
+    </script>
+</body>
+</html>
+

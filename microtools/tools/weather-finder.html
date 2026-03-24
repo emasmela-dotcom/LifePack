@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Weather Finder - Real-Time Weather</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .mode-selector {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mode-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .location-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .location-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .btn.success {
+            background: #28a745;
+        }
+        
+        .weather-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .weather-display h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .current-weather {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .weather-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .weather-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .weather-temp {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .weather-desc {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .forecast-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .forecast-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .forecast-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .forecast-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .forecast-day {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .forecast-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .forecast-temp {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .forecast-desc {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .alerts-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .alerts-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .alert-item {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+        
+        .alert-desc {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .offline-notice {
+            background: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .offline-notice h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+        
+        .offline-notice p {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+        
+        .online-features {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .online-features h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .online-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .online-features li {
+            padding: 5px 0;
+            color: #1976d2;
+        }
+        
+        .online-features li::before {
+            content: "☁️ ";
+            margin-right: 8px;
+        }
+        
+        .tips {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .tips li::before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .current-weather {
+                grid-template-columns: 1fr;
+            }
+            
+            .forecast-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌤️ Smart Weather Finder</h1>
+            <p>Real-time weather, accurate forecasts, always up-to-date</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="mode-selector">
+                <h3>Choose Your Mode</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="weatherApp.setMode('offline')">🔒 Offline Mode</button>
+                    <button class="mode-btn" onclick="weatherApp.setMode('online')">☁️ Online Mode</button>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <span id="modeDescription">Your weather data stays on your device. Completely private and secure.</span>
+                </p>
+            </div>
+            
+            <div class="location-section">
+                <h2>Get Weather for Your Location</h2>
+                <form id="locationForm">
+                    <div class="form-group">
+                        <label for="locationInput">Enter City, State, or ZIP Code</label>
+                        <input type="text" id="locationInput" placeholder="e.g., New York, NY or 10001" required>
+                    </div>
+                    <button type="submit" class="btn">Get Weather</button>
+                    <button type="button" class="btn secondary" onclick="weatherApp.getCurrentLocation()">Use My Location</button>
+                </form>
+            </div>
+            
+            <div class="weather-display" id="weatherDisplay" style="display: none;">
+                <h2 id="locationName">Current Weather</h2>
+                <div class="current-weather" id="currentWeather">
+                    <!-- Weather data will be populated here -->
+                </div>
+            </div>
+            
+            <div class="forecast-section" id="forecastSection" style="display: none;">
+                <h3>7-Day Forecast</h3>
+                <div class="forecast-grid" id="forecastGrid">
+                    <!-- Forecast data will be populated here -->
+                </div>
+            </div>
+            
+            <div class="alerts-section" id="alertsSection" style="display: none;">
+                <h3>⚠️ Weather Alerts</h3>
+                <div id="alertsList">
+                    <!-- Weather alerts will be populated here -->
+                </div>
+            </div>
+            
+            <div class="offline-notice" id="offlineNotice" style="display: none;">
+                <h3>🔒 Offline Mode Active</h3>
+                <p>You're using cached weather data. For real-time updates, switch to Online Mode.</p>
+                <p>Last updated: <span id="lastUpdated">Never</span></p>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Weather Tips</h3>
+            <ul>
+                <li>Check weather before planning outdoor activities</li>
+                <li>Dress in layers for changing conditions</li>
+                <li>Keep an umbrella handy for unexpected rain</li>
+                <li>Monitor weather alerts for severe conditions</li>
+                <li>Plan ahead for weather-dependent events</li>
+                <li>Use real-time data for accurate current conditions</li>
+            </ul>
+        </div>
+        
+        <div class="online-features" id="onlineFeatures" style="display: none;">
+            <h4>☁️ Online Features (Pro Version)</h4>
+            <ul>
+                <li>Real-time weather updates every 15 minutes</li>
+                <li>GPS location detection for automatic weather</li>
+                <li>Severe weather alerts and notifications</li>
+                <li>Detailed hourly forecasts</li>
+                <li>Weather radar and satellite imagery</li>
+                <li>Historical weather data and trends</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class WeatherApp {
+            constructor() {
+                this.mode = 'offline';
+                this.currentLocation = null;
+                this.weatherData = this.loadWeatherData();
+                this.init();
+            }
+            
+            init() {
+                document.getElementById('locationForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.getWeather();
+                });
+                
+                // Check if we have cached weather data
+                if (this.weatherData && this.weatherData.location) {
+                    this.displayWeather(this.weatherData);
+                }
+            }
+            
+            setMode(mode) {
+                this.mode = mode;
+                
+                // Update mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[onclick="weatherApp.setMode('${mode}')"]`).classList.add('active');
+                
+                // Update description
+                const description = document.getElementById('modeDescription');
+                const onlineFeatures = document.getElementById('onlineFeatures');
+                
+                if (mode === 'offline') {
+                    description.textContent = 'Your weather data stays on your device. Completely private and secure.';
+                    onlineFeatures.style.display = 'none';
+                } else {
+                    description.textContent = 'Real-time weather updates, GPS location, and advanced features.';
+                    onlineFeatures.style.display = 'block';
+                }
+            }
+            
+            getWeather() {
+                const location = document.getElementById('locationInput').value;
+                if (!location) return;
+                
+                if (this.mode === 'offline') {
+                    this.getOfflineWeather(location);
+                } else {
+                    this.getOnlineWeather(location);
+                }
+            }
+            
+            getOfflineWeather(location) {
+                // Simulate offline weather data
+                const mockWeather = {
+                    location: location,
+                    current: {
+                        temp: 72,
+                        condition: 'Sunny',
+                        icon: '☀️',
+                        humidity: 45,
+                        wind: 8,
+                        pressure: 30.15,
+                        visibility: 10
+                    },
+                    forecast: [
+                        { day: 'Today', icon: '☀️', high: 75, low: 65, condition: 'Sunny' },
+                        { day: 'Tomorrow', icon: '⛅', high: 78, low: 68, condition: 'Partly Cloudy' },
+                        { day: 'Wednesday', icon: '🌧️', high: 70, low: 60, condition: 'Rain' },
+                        { day: 'Thursday', icon: '☀️', high: 80, low: 70, condition: 'Sunny' },
+                        { day: 'Friday', icon: '⛅', high: 82, low: 72, condition: 'Partly Cloudy' },
+                        { day: 'Saturday', icon: '☀️', high: 85, low: 75, condition: 'Sunny' },
+                        { day: 'Sunday', icon: '⛅', high: 83, low: 73, condition: 'Partly Cloudy' }
+                    ],
+                    alerts: [],
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                this.weatherData = mockWeather;
+                this.saveWeatherData();
+                this.displayWeather(mockWeather);
+                this.showOfflineNotice();
+            }
+            
+            getOnlineWeather(location) {
+                // In a real implementation, this would call a weather API
+                // For demo purposes, we'll show a message
+                alert('Online Mode: Real-time weather data would be fetched from weather API.\n\nPro features include:\n• Real-time updates\n• GPS location\n• Severe weather alerts\n• Detailed forecasts');
+                
+                // Simulate online weather data
+                const onlineWeather = {
+                    location: location,
+                    current: {
+                        temp: 74,
+                        condition: 'Partly Cloudy',
+                        icon: '⛅',
+                        humidity: 52,
+                        wind: 12,
+                        pressure: 30.08,
+                        visibility: 8
+                    },
+                    forecast: [
+                        { day: 'Today', icon: '⛅', high: 76, low: 66, condition: 'Partly Cloudy' },
+                        { day: 'Tomorrow', icon: '🌧️', high: 72, low: 62, condition: 'Rain' },
+                        { day: 'Wednesday', icon: '☀️', high: 78, low: 68, condition: 'Sunny' },
+                        { day: 'Thursday', icon: '⛅', high: 82, low: 72, condition: 'Partly Cloudy' },
+                        { day: 'Friday', icon: '☀️', high: 85, low: 75, condition: 'Sunny' },
+                        { day: 'Saturday', icon: '⛅', high: 83, low: 73, condition: 'Partly Cloudy' },
+                        { day: 'Sunday', icon: '🌧️', high: 75, low: 65, condition: 'Rain' }
+                    ],
+                    alerts: [
+                        { title: 'Heat Advisory', description: 'High temperatures expected. Stay hydrated and avoid prolonged outdoor activities.' }
+                    ],
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                this.weatherData = onlineWeather;
+                this.saveWeatherData();
+                this.displayWeather(onlineWeather);
+                this.hideOfflineNotice();
+            }
+            
+            getCurrentLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            document.getElementById('locationInput').value = `${lat}, ${lon}`;
+                            this.getWeather();
+                        },
+                        (error) => {
+                            alert('Unable to get your location. Please enter a city name or ZIP code.');
+                        }
+                    );
+                } else {
+                    alert('Geolocation is not supported by this browser.');
+                }
+            }
+            
+            displayWeather(data) {
+                document.getElementById('locationName').textContent = `Weather in ${data.location}`;
+                document.getElementById('weatherDisplay').style.display = 'block';
+                
+                // Display current weather
+                const current = data.current;
+                document.getElementById('currentWeather').innerHTML = `
+                    <div class="weather-item">
+                        <div class="weather-icon">${current.icon}</div>
+                        <div class="weather-temp">${current.temp}°F</div>
+                        <div class="weather-desc">${current.condition}</div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Humidity</div>
+                            <div class="detail-value">${current.humidity}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Wind</div>
+                            <div class="detail-value">${current.wind} mph</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Pressure</div>
+                            <div class="detail-value">${current.pressure}"</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Visibility</div>
+                            <div class="detail-value">${current.visibility} mi</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Display forecast
+                document.getElementById('forecastSection').style.display = 'block';
+                document.getElementById('forecastGrid').innerHTML = data.forecast.map(day => `
+                    <div class="forecast-item">
+                        <div class="forecast-day">${day.day}</div>
+                        <div class="forecast-icon">${day.icon}</div>
+                        <div class="forecast-temp">${day.high}°/${day.low}°</div>
+                        <div class="forecast-desc">${day.condition}</div>
+                    </div>
+                `).join('');
+                
+                // Display alerts
+                if (data.alerts && data.alerts.length > 0) {
+                    document.getElementById('alertsSection').style.display = 'block';
+                    document.getElementById('alertsList').innerHTML = data.alerts.map(alert => `
+                        <div class="alert-item">
+                            <div class="alert-title">${alert.title}</div>
+                            <div class="alert-desc">${alert.description}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('alertsSection').style.display = 'none';
+                }
+            }
+            
+            showOfflineNotice() {
+                document.getElementById('offlineNotice').style.display = 'block';
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+            }
+            
+            hideOfflineNotice() {
+                document.getElementById('offlineNotice').style.display = 'none';
+            }
+            
+            saveWeatherData() {
+                localStorage.setItem('weatherData', JSON.stringify(this.weatherData));
+            }
+            
+            loadWeatherData() {
+                const saved = localStorage.getItem('weatherData');
+                return saved ? JSON.parse(saved) : null;
+            }
+        }
+        
+        // Initialize the weather app
+        const weatherApp = new WeatherApp();
+    </script>
+</body>
+</html>
+

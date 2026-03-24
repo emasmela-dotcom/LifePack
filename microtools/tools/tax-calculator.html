@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator Demo - Digital Microtools</title>
+    <style>
+        body { background:#000; color:#fff; font-family: Arial, sans-serif; padding:20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        input, select { width:100%; padding:10px; border:1px solid #333; background:#111; color:#fff; border-radius:6px; }
+        .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
+        .btn { background:#0066ff; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; margin-top:10px; }
+        .card { background:#0c0c0c; border:1px solid #222; border-radius:10px; padding:16px; margin:12px 0; }
+        .row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #111; }
+        .total { font-weight:700; color:#00ff99; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" style="color:#93c5fd">← Back to Marketplace</a>
+        <h1>Tax Calculator (Demo)</h1>
+        <div class="grid">
+            <input id="income" type="number" min="0" step="0.01" placeholder="Annual income (e.g. 65000)">
+            <select id="status">
+                <option value="single">Single</option>
+                <option value="married">Married Filing Jointly</option>
+                <option value="head">Head of Household</option>
+            </select>
+            <input id="standard" type="number" min="0" step="0.01" placeholder="Standard deduction (optional)">
+            <input id="itemized" type="number" min="0" step="0.01" placeholder="Itemized deductions (optional)">
+        </div>
+        <button class="btn" id="calc">Calculate</button>
+        <div class="card">
+            <div class="row"><div>Taxable Income</div><div id="taxable">$0.00</div></div>
+            <div class="row"><div>Federal Tax</div><div id="federal">$0.00</div></div>
+            <div class="row"><div>State Tax (est.)</div><div id="state">$0.00</div></div>
+            <div class="row total"><div>Total Tax</div><div id="total">$0.00</div></div>
+        </div>
+    </div>
+    <script>
+        const brackets = {
+            single:[{m:0,M:10275,r:.10},{m:10275,M:41775,r:.12},{m:41775,M:89450,r:.22},{m:89450,M:190750,r:.24},{m:190750,M:364200,r:.32},{m:364200,M:462550,r:.35},{m:462550,M:Infinity,r:.37}],
+            married:[{m:0,M:20550,r:.10},{m:20550,M:83550,r:.12},{m:83550,M:178900,r:.22},{m:178900,M:381450,r:.24},{m:381450,M:728500,r:.32},{m:728500,M:925100,r:.35},{m:925100,M:Infinity,r:.37}],
+            head:[{m:0,M:14650,r:.10},{m:14650,M:55900,r:.12},{m:55900,M:89450,r:.22},{m:89450,M:190750,r:.24},{m:190750,M:364200,r:.32},{m:364200,M:462550,r:.35},{m:462550,M:Infinity,r:.37}]
+        };
+        function calcBracketTax(income, bs){
+            let tax=0, rem=income; for(const b of bs){ if(rem<=0) break; const span=Math.min(rem, b.M-b.m); tax += span*b.r; rem -= span; } return tax;
+        }
+        function calc(){
+            const income=parseFloat(document.getElementById('income').value)||0;
+            const status=document.getElementById('status').value;
+            const std=parseFloat(document.getElementById('standard').value)||0;
+            const itm=parseFloat(document.getElementById('itemized').value)||0;
+            const ded=Math.max(std,itm);
+            const taxable=Math.max(0,income-ded);
+            const fed=calcBracketTax(taxable, brackets[status]);
+            const state=taxable*0.05; // simple placeholder
+            const total=fed+state;
+            document.getElementById('taxable').textContent = `$${taxable.toFixed(2)}`;
+            document.getElementById('federal').textContent = `$${fed.toFixed(2)}`;
+            document.getElementById('state').textContent = `$${state.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+        document.getElementById('calc').onclick = calc;
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - Calculate Your Taxes & Deductions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .results-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .deduction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .deduction-name {
+            font-weight: 500;
+        }
+        
+        .deduction-amount {
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .tax-bracket {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .bracket-range {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .bracket-rate {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .bracket-amount {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .deduction-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .deduction-category {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .category-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .deduction-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .deduction-input input {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: right;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .deduction-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Tax Calculator</h1>
+            <p>Calculate your taxes, find deductions, and optimize your tax strategy. Get accurate estimates for your tax situation.</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('calculator')">🧮 Calculator</div>
+                <div class="tab" onclick="switchTab('deductions')">📋 Deductions</div>
+                <div class="tab" onclick="switchTab('brackets')">📊 Tax Brackets</div>
+                <div class="tab" onclick="switchTab('quarterly')">📅 Quarterly</div>
+            </div>
+            
+            <!-- Calculator Tab -->
+            <div id="calculator" class="tab-content active">
+                <div class="form-section">
+                    <h3>💰 Income Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="filingStatus">Filing Status</label>
+                            <select id="filingStatus" onchange="calculateTax()">
+                                <option value="single">Single</option>
+                                <option value="married-joint">Married Filing Jointly</option>
+                                <option value="married-separate">Married Filing Separately</option>
+                                <option value="head-household">Head of Household</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxYear">Tax Year</label>
+                            <select id="taxYear" onchange="calculateTax()">
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="grossIncome">Gross Income ($)</label>
+                            <input type="number" id="grossIncome" min="0" step="0.01" placeholder="50000" onchange="calculateTax()">
+                        </div>
+                        <div class="form-group">
+                            <label for="adjustments">Adjustments to Income ($)</label>
+                            <input type="number" id="adjustments" min="0" step="0.01" placeholder="0" onchange="calculateTax()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="standardDeduction">Standard Deduction ($)</label>
+                            <input type="number" id="standardDeduction" min="0" step="0.01" placeholder="0" onchange="calculateTax()">
+                        </div>
+                        <div class="form-group">
+                            <label for="itemizedDeductions">Itemized Deductions ($)</label>
+                            <input type="number" id="itemizedDeductions" min="0" step="0.01" placeholder="0" onchange="calculateTax()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taxCredits">Tax Credits ($)</label>
+                            <input type="number" id="taxCredits" min="0" step="0.01" placeholder="0" onchange="calculateTax()">
+                        </div>
+                        <div class="form-group">
+                            <label for="withholding">Tax Withholding ($)</label>
+                            <input type="number" id="withholding" min="0" step="0.01" placeholder="0" onchange="calculateTax()">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="calculateTax()">🧮 Calculate Tax</button>
+                    <button class="btn btn-secondary" onclick="clearCalculator()">🗑️ Clear</button>
+                    <button class="btn btn-success" onclick="saveCalculation()">💾 Save Calculation</button>
+                </div>
+                
+                <div id="taxResults" class="results-card" style="display: none;">
+                    <h3>📊 Tax Calculation Results</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-value" id="adjustedGrossIncome">$0</div>
+                            <div class="result-label">Adjusted Gross Income</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="taxableIncome">$0</div>
+                            <div class="result-label">Taxable Income</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="federalTax">$0</div>
+                            <div class="result-label">Federal Tax</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="effectiveRate">0%</div>
+                            <div class="result-label">Effective Tax Rate</div>
+                        </div>
+                    </div>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-value" id="refundAmount">$0</div>
+                            <div class="result-label">Refund Amount</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="amountOwed">$0</div>
+                            <div class="result-label">Amount Owed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Deductions Tab -->
+            <div id="deductions" class="tab-content">
+                <div class="info">
+                    <strong>💡 Tip:</strong> Use this section to explore common deductions and see how they affect your tax calculation.
+                </div>
+                
+                <div class="deduction-categories">
+                    <div class="deduction-category">
+                        <div class="category-title">🏠 Home & Property</div>
+                        <div class="deduction-input">
+                            <span>Mortgage Interest:</span>
+                            <input type="number" id="mortgageInterest" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Property Taxes:</span>
+                            <input type="number" id="propertyTaxes" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Home Office:</span>
+                            <input type="number" id="homeOffice" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                    </div>
+                    
+                    <div class="deduction-category">
+                        <div class="category-title">🚗 Transportation</div>
+                        <div class="deduction-input">
+                            <span>Vehicle Expenses:</span>
+                            <input type="number" id="vehicleExpenses" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Mileage:</span>
+                            <input type="number" id="mileage" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Parking/Tolls:</span>
+                            <input type="number" id="parkingTolls" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                    </div>
+                    
+                    <div class="deduction-category">
+                        <div class="category-title">💼 Business & Work</div>
+                        <div class="deduction-input">
+                            <span>Business Expenses:</span>
+                            <input type="number" id="businessExpenses" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Professional Development:</span>
+                            <input type="number" id="professionalDev" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Equipment/Supplies:</span>
+                            <input type="number" id="equipmentSupplies" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                    </div>
+                    
+                    <div class="deduction-category">
+                        <div class="category-title">🏥 Health & Medical</div>
+                        <div class="deduction-input">
+                            <span>Medical Expenses:</span>
+                            <input type="number" id="medicalExpenses" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Dental/Vision:</span>
+                            <input type="number" id="dentalVision" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                        <div class="deduction-input">
+                            <span>Prescriptions:</span>
+                            <input type="number" id="prescriptions" min="0" step="0.01" placeholder="0" onchange="updateDeductions()">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn" onclick="applyDeductions()">📋 Apply to Calculator</button>
+                    <button class="btn btn-secondary" onclick="clearDeductions()">🗑️ Clear All</button>
+                </div>
+            </div>
+            
+            <!-- Tax Brackets Tab -->
+            <div id="brackets" class="tab-content">
+                <div class="form-section">
+                    <h3>📊 Tax Brackets for 2024</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bracketStatus">Filing Status</label>
+                            <select id="bracketStatus" onchange="showTaxBrackets()">
+                                <option value="single">Single</option>
+                                <option value="married-joint">Married Filing Jointly</option>
+                                <option value="married-separate">Married Filing Separately</option>
+                                <option value="head-household">Head of Household</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="taxBrackets">
+                    <!-- Tax brackets will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Quarterly Tab -->
+            <div id="quarterly" class="tab-content">
+                <div class="form-section">
+                    <h3>📅 Quarterly Tax Estimates</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quarterlyIncome">Estimated Annual Income ($)</label>
+                            <input type="number" id="quarterlyIncome" min="0" step="0.01" placeholder="50000" onchange="calculateQuarterly()">
+                        </div>
+                        <div class="form-group">
+                            <label for="quarterlyStatus">Filing Status</label>
+                            <select id="quarterlyStatus" onchange="calculateQuarterly()">
+                                <option value="single">Single</option>
+                                <option value="married-joint">Married Filing Jointly</option>
+                                <option value="married-separate">Married Filing Separately</option>
+                                <option value="head-household">Head of Household</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="quarterlyResults" class="results-card" style="display: none;">
+                    <h3>📊 Quarterly Payment Schedule</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-value" id="quarterlyAmount">$0</div>
+                            <div class="result-label">Per Quarter</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="annualAmount">$0</div>
+                            <div class="result-label">Annual Total</div>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <strong>📅 Payment Due Dates:</strong><br>
+                        • Q1: April 15<br>
+                        • Q2: June 15<br>
+                        • Q3: September 15<br>
+                        • Q4: January 15 (next year)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 2024 Tax Brackets
+        const taxBrackets2024 = {
+            single: [
+                { min: 0, max: 11000, rate: 0.10 },
+                { min: 11000, max: 44725, rate: 0.12 },
+                { min: 44725, max: 95375, rate: 0.22 },
+                { min: 95375, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 578125, rate: 0.35 },
+                { min: 578125, max: Infinity, rate: 0.37 }
+            ],
+            'married-joint': [
+                { min: 0, max: 22000, rate: 0.10 },
+                { min: 22000, max: 89450, rate: 0.12 },
+                { min: 89450, max: 190750, rate: 0.22 },
+                { min: 190750, max: 364200, rate: 0.24 },
+                { min: 364200, max: 462500, rate: 0.32 },
+                { min: 462500, max: 693750, rate: 0.35 },
+                { min: 693750, max: Infinity, rate: 0.37 }
+            ],
+            'married-separate': [
+                { min: 0, max: 11000, rate: 0.10 },
+                { min: 11000, max: 44725, rate: 0.12 },
+                { min: 44725, max: 95375, rate: 0.22 },
+                { min: 95375, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 346875, rate: 0.35 },
+                { min: 346875, max: Infinity, rate: 0.37 }
+            ],
+            'head-household': [
+                { min: 0, max: 15700, rate: 0.10 },
+                { min: 15700, max: 59850, rate: 0.12 },
+                { min: 59850, max: 95350, rate: 0.22 },
+                { min: 95350, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 578100, rate: 0.35 },
+                { min: 578100, max: Infinity, rate: 0.37 }
+            ]
+        };
+        
+        // Standard Deductions 2024
+        const standardDeductions2024 = {
+            single: 13850,
+            'married-joint': 27700,
+            'married-separate': 13850,
+            'head-household': 20800
+        };
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'brackets') {
+                showTaxBrackets();
+            }
+        }
+        
+        function calculateTax() {
+            const filingStatus = document.getElementById('filingStatus').value;
+            const grossIncome = parseFloat(document.getElementById('grossIncome').value) || 0;
+            const adjustments = parseFloat(document.getElementById('adjustments').value) || 0;
+            const standardDeduction = parseFloat(document.getElementById('standardDeduction').value) || 0;
+            const itemizedDeductions = parseFloat(document.getElementById('itemizedDeductions').value) || 0;
+            const taxCredits = parseFloat(document.getElementById('taxCredits').value) || 0;
+            const withholding = parseFloat(document.getElementById('withholding').value) || 0;
+            
+            // Calculate Adjusted Gross Income
+            const adjustedGrossIncome = grossIncome - adjustments;
+            
+            // Determine deduction (standard vs itemized)
+            const standardDeductionAmount = standardDeduction || standardDeductions2024[filingStatus];
+            const totalDeductions = Math.max(standardDeductionAmount, itemizedDeductions);
+            
+            // Calculate taxable income
+            const taxableIncome = Math.max(0, adjustedGrossIncome - totalDeductions);
+            
+            // Calculate federal tax
+            const federalTax = calculateFederalTax(taxableIncome, filingStatus);
+            const finalTax = Math.max(0, federalTax - taxCredits);
+            
+            // Calculate effective rate
+            const effectiveRate = adjustedGrossIncome > 0 ? (finalTax / adjustedGrossIncome) * 100 : 0;
+            
+            // Calculate refund/amount owed
+            const refundAmount = Math.max(0, withholding - finalTax);
+            const amountOwed = Math.max(0, finalTax - withholding);
+            
+            // Display results
+            document.getElementById('adjustedGrossIncome').textContent = `$${adjustedGrossIncome.toLocaleString()}`;
+            document.getElementById('taxableIncome').textContent = `$${taxableIncome.toLocaleString()}`;
+            document.getElementById('federalTax').textContent = `$${finalTax.toLocaleString()}`;
+            document.getElementById('effectiveRate').textContent = `${effectiveRate.toFixed(2)}%`;
+            document.getElementById('refundAmount').textContent = `$${refundAmount.toLocaleString()}`;
+            document.getElementById('amountOwed').textContent = `$${amountOwed.toLocaleString()}`;
+            
+            document.getElementById('taxResults').style.display = 'block';
+        }
+        
+        function calculateFederalTax(income, filingStatus) {
+            const brackets = taxBrackets2024[filingStatus];
+            let tax = 0;
+            let remainingIncome = income;
+            
+            for (const bracket of brackets) {
+                if (remainingIncome <= 0) break;
+                
+                const taxableInBracket = Math.min(remainingIncome, bracket.max - bracket.min);
+                tax += taxableInBracket * bracket.rate;
+                remainingIncome -= taxableInBracket;
+            }
+            
+            return tax;
+        }
+        
+        function showTaxBrackets() {
+            const filingStatus = document.getElementById('bracketStatus').value;
+            const brackets = taxBrackets2024[filingStatus];
+            const bracketsContainer = document.getElementById('taxBrackets');
+            
+            bracketsContainer.innerHTML = '';
+            
+            brackets.forEach((bracket, index) => {
+                const bracketDiv = document.createElement('div');
+                bracketDiv.className = 'tax-bracket';
+                
+                const maxDisplay = bracket.max === Infinity ? 'and above' : `$${bracket.max.toLocaleString()}`;
+                const ratePercent = (bracket.rate * 100).toFixed(0);
+                
+                bracketDiv.innerHTML = `
+                    <div class="bracket-range">$${bracket.min.toLocaleString()} - ${maxDisplay}</div>
+                    <div class="bracket-rate">${ratePercent}%</div>
+                `;
+                
+                bracketsContainer.appendChild(bracketDiv);
+            });
+        }
+        
+        function calculateQuarterly() {
+            const income = parseFloat(document.getElementById('quarterlyIncome').value) || 0;
+            const filingStatus = document.getElementById('quarterlyStatus').value;
+            
+            if (income <= 0) {
+                document.getElementById('quarterlyResults').style.display = 'none';
+                return;
+            }
+            
+            // Calculate estimated tax
+            const standardDeduction = standardDeductions2024[filingStatus];
+            const taxableIncome = Math.max(0, income - standardDeduction);
+            const estimatedTax = calculateFederalTax(taxableIncome, filingStatus);
+            
+            // Add self-employment tax (15.3% for SE tax)
+            const selfEmploymentTax = income * 0.153;
+            const totalTax = estimatedTax + selfEmploymentTax;
+            
+            const quarterlyAmount = totalTax / 4;
+            
+            document.getElementById('quarterlyAmount').textContent = `$${quarterlyAmount.toLocaleString()}`;
+            document.getElementById('annualAmount').textContent = `$${totalTax.toLocaleString()}`;
+            
+            document.getElementById('quarterlyResults').style.display = 'block';
+        }
+        
+        function updateDeductions() {
+            // This function is called when deduction inputs change
+            // Could be used to show real-time updates
+        }
+        
+        function applyDeductions() {
+            // Calculate total deductions from all categories
+            const deductionInputs = [
+                'mortgageInterest', 'propertyTaxes', 'homeOffice',
+                'vehicleExpenses', 'mileage', 'parkingTolls',
+                'businessExpenses', 'professionalDev', 'equipmentSupplies',
+                'medicalExpenses', 'dentalVision', 'prescriptions'
+            ];
+            
+            let totalDeductions = 0;
+            deductionInputs.forEach(id => {
+                totalDeductions += parseFloat(document.getElementById(id).value) || 0;
+            });
+            
+            // Apply to calculator
+            document.getElementById('itemizedDeductions').value = totalDeductions;
+            calculateTax();
+            
+            alert(`Applied $${totalDeductions.toLocaleString()} in deductions to your tax calculation.`);
+        }
+        
+        function clearDeductions() {
+            const deductionInputs = [
+                'mortgageInterest', 'propertyTaxes', 'homeOffice',
+                'vehicleExpenses', 'mileage', 'parkingTolls',
+                'businessExpenses', 'professionalDev', 'equipmentSupplies',
+                'medicalExpenses', 'dentalVision', 'prescriptions'
+            ];
+            
+            deductionInputs.forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+        
+        function clearCalculator() {
+            document.getElementById('grossIncome').value = '';
+            document.getElementById('adjustments').value = '';
+            document.getElementById('standardDeduction').value = '';
+            document.getElementById('itemizedDeductions').value = '';
+            document.getElementById('taxCredits').value = '';
+            document.getElementById('withholding').value = '';
+            document.getElementById('taxResults').style.display = 'none';
+        }
+        
+        function saveCalculation() {
+            const calculation = {
+                date: new Date().toISOString(),
+                filingStatus: document.getElementById('filingStatus').value,
+                grossIncome: parseFloat(document.getElementById('grossIncome').value) || 0,
+                adjustments: parseFloat(document.getElementById('adjustments').value) || 0,
+                standardDeduction: parseFloat(document.getElementById('standardDeduction').value) || 0,
+                itemizedDeductions: parseFloat(document.getElementById('itemizedDeductions').value) || 0,
+                taxCredits: parseFloat(document.getElementById('taxCredits').value) || 0,
+                withholding: parseFloat(document.getElementById('withholding').value) || 0
+            };
+            
+            const savedCalculations = JSON.parse(localStorage.getItem('taxCalculations') || '[]');
+            savedCalculations.push(calculation);
+            localStorage.setItem('taxCalculations', JSON.stringify(savedCalculations));
+            
+            alert('Tax calculation saved successfully!');
+        }
+        
+        // Initialize with standard deductions
+        document.addEventListener('DOMContentLoaded', function() {
+            const filingStatus = document.getElementById('filingStatus').value;
+            document.getElementById('standardDeduction').value = standardDeductions2024[filingStatus];
+        });
+        
+        // Update standard deduction when filing status changes
+        document.getElementById('filingStatus').addEventListener('change', function() {
+            const filingStatus = this.value;
+            document.getElementById('standardDeduction').value = standardDeductions2024[filingStatus];
+        });
+    </script>
+</body>
+</html>
