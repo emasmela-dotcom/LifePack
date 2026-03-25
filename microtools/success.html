@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LifePack — Download</title>
+  <style>
+    :root{
+      --bg:#09090b; --bg2:#0c0c0f; --surface:#121214; --surface2:#18181c;
+      --text:#fafafa; --muted:#a1a1aa; --accent:#38bdf8; --ok:#4ade80;
+      --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.14);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(56,189,248,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg2) 0%, var(--bg) 40%);
+      color:var(--muted);
+      padding:24px;
+    }
+    .card{
+      width:min(820px,100%);
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:26px;
+      box-shadow:0 24px 60px rgba(0,0,0,0.45);
+      text-align:center;
+    }
+    h1{margin:0 0 10px; color:var(--text); font-size:2rem}
+    p{margin:0 0 18px; line-height:1.5}
+    .ok{color:var(--ok); font-weight:900}
+    .buttons{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:14px}
+    a.btn{
+      display:inline-block;
+      background:var(--text);
+      color:var(--bg);
+      text-decoration:none;
+      font-weight:900;
+      padding:14px 20px;
+      border-radius:12px;
+      border:1px solid transparent;
+    }
+    a.btn:hover{border-color:var(--border2)}
+    .small{font-size:0.95rem; color:var(--muted); margin-top:12px}
+    code{color:var(--text)}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1><span class="ok">Payment confirmed.</span></h1>
+    <p>Your LifePack download is ready.</p>
+
+    <div class="buttons">
+      <a class="btn" href="/lifepack-install-macos.command">Download Mac installer</a>
+      <a class="btn" href="/lifepack-install-windows.bat">Download Windows installer</a>
+      <a class="btn" href="/lifepack-tools.zip">Download ZIP (Android / iPhone too)</a>
+    </div>
+
+    <p class="small">
+      If you’re on Android/iPhone: download the ZIP, unzip it, then open <code>index.html</code> in your browser.
+    </p>
+
+    <p class="small">
+      If a browser blocks auto-download, just click the buttons above again.
+    </p>
+  </div>
+</body>
+</html>
