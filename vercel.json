@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/microtools/index.html" },
+    { "source": "/(.*)", "destination": "/microtools/$1" }
+  ]
+}
