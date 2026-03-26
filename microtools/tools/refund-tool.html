@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Refund Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#0e0c0a;--paper:#f5f0e8;--card:#faf7f2;--border:#cdc4b4;--rust:#c1440e;--muted:#7a6e60;--shadow:rgba(14,12,10,.08);}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;padding:24px}
+    .wrap{max-width:760px;margin:0 auto}
+    h1{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800}
+    h1 em{color:var(--rust);font-style:normal}
+    .sub{color:var(--muted);margin:10px 0 20px;line-height:1.6}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 2px 12px var(--shadow);margin-bottom:16px}
+    label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 6px}
+    input,textarea,select,button{font-family:inherit;font-size:.95rem}
+    input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:#fff}
+    textarea{min-height:100px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{background:var(--rust);color:#fff;border:none;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer;margin-top:14px}
+    .btn:hover{filter:brightness(1.05)}
+    .out{white-space:pre-wrap;line-height:1.6;font-size:.95rem}
+    .muted{color:var(--muted)}
+    @media (max-width:700px){.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<script src="../lifepack-access.js"></script>
+<!-- LifePack: overlay renders before app paint if user is not paid -->
+  <div class="wrap">
+    <h1>Refund <em>tool</em></h1>
+    <p class="sub">Create a clear refund request summary you can copy and send to support.</p>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Order email</label>
+          <input id="email" type="email" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label>Order date</label>
+          <input id="date" type="date" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Payment method</label>
+          <select id="method">
+            <option>Card</option>
+            <option>Cash App Pay</option>
+            <option>Klarna</option>
+            <option>Bank</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Reason</label>
+          <select id="reason">
+            <option>Purchased by mistake</option>
+            <option>Technical issue</option>
+            <option>Not what I expected</option>
+            <option>Duplicate purchase</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Details</label>
+      <textarea id="details" placeholder="Add short details for support..."></textarea>
+
+      <button class="btn" id="build">Generate Request</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:10px">Refund request preview</h3>
+      <div class="out" id="out">Fill the form and click "Generate Request".</div>
+      <button class="btn" id="copy" style="background:#111;margin-top:12px">Copy to Clipboard</button>
+      <p class="muted" style="margin-top:8px">Send this to your support email/contact form.</p>
+    </div>
+  </div>
+
+  <script>
+    const out = document.getElementById('out');
+    document.getElementById('build').addEventListener('click', () => {
+      const email = document.getElementById('email').value.trim() || '(not provided)';
+      const date = document.getElementById('date').value || '(not provided)';
+      const method = document.getElementById('method').value;
+      const reason = document.getElementById('reason').value;
+      const details = document.getElementById('details').value.trim() || '(no extra details)';
+      out.textContent =
+`Subject: Refund Request - LifePack
+
+Hello Support,
+
+I am requesting a refund for my LifePack purchase.
+
+Order email: ${email}
+Order date: ${date}
+Payment method: ${method}
+Reason: ${reason}
+
+Details:
+${details}
+
+Please let me know if you need any additional information.
+
+Thank you.`;
+    });
+
+    document.getElementById('copy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(out.textContent);
+        alert('Copied.');
+      } catch {
+        alert('Copy failed. Select text manually.');
+      }
+    });
+  </script>
+</body>
+</html>
