@@ -47,6 +47,20 @@
     .small{font-size:0.95rem; color:var(--muted); margin-top:12px}
     code{color:var(--text)}
   </style>
+  <!--
+    LifePack post-checkout unlock script.
+    STRIPE SETUP: In your Stripe Dashboard → Payment Link → After payment,
+    set the "Confirmation page" redirect to: https://YOUR_DOMAIN/success.html
+  -->
+  <script>
+    (function () {
+      try {
+        localStorage.setItem("lifepack_paid_v1", "1");
+      } catch (e) {
+        // localStorage blocked (private browsing, etc.) — fail silently
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="card">
