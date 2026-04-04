@@ -44,7 +44,7 @@
     /* Build modal once */
     const modal = buildModal({
       titleText : "Payment required",
-      bodyText  : "LifePack is a one-time $19 purchase that unlocks all five " +
+      bodyText  : "LifePack is a one-time $9 purchase that unlocks all five " +
                   "tools permanently. No subscriptions, no hidden fees.",
       offerHref : OFFER_PAGE,
     });
@@ -79,7 +79,7 @@
       '<div class="lp-ol-box">',
       '  <h2 id="lp-ol-title">Payment required</h2>',
       '  <p  id="lp-ol-body">',
-      '    LifePack is a one-time $19 purchase that unlocks all five tools',
+      '    LifePack is a one-time $9 purchase that unlocks all five tools',
       '    permanently. No subscriptions, no hidden fees.',
       '  </p>',
       '  <div class="lp-ol-actions">',
