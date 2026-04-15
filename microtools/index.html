@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifePack — Five apps. One life. One price.</title>
-    <meta name="description" content="LifePack bundles app categories people often search for as separate SaaS—finance, planning, wellness, productivity—into five privacy-friendly browser tools. Pay once, no subscription.">
+    <title>LifePack | Budget Tracker, Daily Planner & Wellness Tools</title>
+    <meta name="description" content="LifePack bundles five local-first browser tools in one $9 purchase: budget tracking, daily planning, wellness check-ins, local board posts, and eco actions.">
     <link rel="canonical" href="https://life-pack365.com/">
     <meta name="theme-color" content="#09090b">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="LifePack">
-    <meta property="og:title" content="LifePack — Five apps. One life. One price.">
-    <meta property="og:description" content="LifePack bundles app categories people often search for as separate SaaS—finance, planning, wellness, productivity—into five privacy-friendly browser tools. Pay once, no subscription.">
+    <meta property="og:title" content="LifePack | Budget Tracker, Daily Planner & Wellness Tools">
+    <meta property="og:description" content="LifePack bundles five local-first browser tools in one $9 purchase: budget tracking, daily planning, wellness check-ins, local board posts, and eco actions.">
     <meta property="og:url" content="https://life-pack365.com/">
     <meta property="og:image" content="https://life-pack365.com/og-image.svg">
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LifePack — Five apps. One life. One price.">
-    <meta name="twitter:description" content="LifePack bundles app categories people often search for as separate SaaS—finance, planning, wellness, productivity—into five privacy-friendly browser tools. Pay once, no subscription.">
+    <meta name="twitter:title" content="LifePack | Budget Tracker, Daily Planner & Wellness Tools">
+    <meta name="twitter:description" content="LifePack bundles five local-first browser tools in one $9 purchase: budget tracking, daily planning, wellness check-ins, local board posts, and eco actions.">
     <meta name="twitter:image" content="https://life-pack365.com/og-image.svg">
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebSite","name":"LifePack","url":"https://life-pack365.com/","description":"LifePack bundles high-demand app categories people often seek as separate SaaS into five privacy-friendly browser tools. Pay once, no subscription.","publisher":{"@type":"Organization","name":"LifePack","url":"https://life-pack365.com/"}}
+    {"@context":"https://schema.org","@type":"WebSite","name":"LifePack","url":"https://life-pack365.com/","description":"LifePack bundles five local-first browser tools in one $9 purchase: budget tracking, daily planning, wellness check-ins, local board posts, and eco actions.","publisher":{"@type":"Organization","name":"LifePack","url":"https://life-pack365.com/"}}
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,19 +198,26 @@
         .header {
             position: relative;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 56px;
             color: white;
             z-index: 10;
             padding-top: 8px;
+            max-width: 860px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 12px;
+            font-size: clamp(2rem, 5.6vw, 3.25rem);
+            margin-bottom: 14px;
             font-weight: 800;
             letter-spacing: -0.03em;
             color: var(--lp-text);
             text-shadow: 0 0 80px rgba(56,189,248,0.12);
+            line-height: 1.1;
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .header p {
@@ -227,10 +234,11 @@
         }
 
         .hero-tagline {
-            font-size: 1.15rem;
+            font-size: 1.06rem;
             font-weight: 600;
             color: var(--lp-text);
-            margin-bottom: 18px;
+            margin-bottom: 14px;
+            letter-spacing: 0.01em;
         }
         
         .hero-description {
@@ -244,10 +252,10 @@
         .hero-focus {
             font-size: 1rem;
             font-weight: 500;
-            color: var(--lp-subtle);
+            color: var(--lp-muted);
             max-width: 640px;
-            margin: 0 auto 8px;
-            line-height: 1.6;
+            margin: 0 auto 10px;
+            line-height: 1.65;
         }
 
         .hero-market {
@@ -255,10 +263,10 @@
             font-weight: 500;
             color: var(--lp-muted);
             max-width: 640px;
-            margin: 0 auto 16px;
-            line-height: 1.65;
+            margin: 0 auto 12px;
+            line-height: 1.6;
             text-align: left;
-            padding: 14px 18px;
+            padding: 14px 18px 10px;
             border-left: 3px solid var(--lp-accent);
             background: var(--lp-accent-dim);
             border-radius: 0 12px 12px 0;
@@ -270,6 +278,106 @@
             font-weight: 600;
             margin-bottom: 8px;
             letter-spacing: -0.02em;
+        }
+
+        .hero-market details {
+            margin-top: 8px;
+        }
+
+        .hero-market summary {
+            cursor: pointer;
+            color: var(--lp-text);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .hero-market p {
+            margin: 6px 0 0;
+            color: var(--lp-muted);
+            font-size: 0.95rem;
+            line-height: 1.55;
+        }
+
+        .hero-proof {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 18px auto 8px;
+            max-width: 640px;
+        }
+
+        .hero-proof span {
+            display: inline-block;
+            border: 1px solid var(--lp-border-hover);
+            background: var(--lp-surface2);
+            color: var(--lp-text);
+            border-radius: 999px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            padding: 7px 12px;
+            letter-spacing: 0.01em;
+        }
+
+        .hero-demo {
+            margin: 18px auto 0;
+            max-width: 640px;
+            background: linear-gradient(165deg, rgba(18,18,20,0.98), rgba(24,24,28,0.96));
+            border: 1px solid var(--lp-border-hover);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: left;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.38);
+        }
+
+        .hero-demo-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .hero-demo-title {
+            font-size: 0.94rem;
+            color: var(--lp-text);
+            font-weight: 700;
+        }
+
+        .hero-demo-chip {
+            font-size: 0.76rem;
+            color: var(--lp-text);
+            background: var(--lp-accent-dim);
+            border: 1px solid rgba(56,189,248,0.35);
+            border-radius: 999px;
+            padding: 4px 8px;
+        }
+
+        .hero-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .hero-demo-cell {
+            border-radius: 10px;
+            border: 1px solid var(--lp-border);
+            background: #111116;
+            padding: 10px;
+            min-height: 74px;
+        }
+
+        .hero-demo-cell strong {
+            display: block;
+            color: var(--lp-text);
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .hero-demo-cell span {
+            color: var(--lp-muted);
+            font-size: 0.76rem;
+            line-height: 1.45;
         }
         
         .hero-stats {
@@ -344,6 +452,9 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
             transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
             border: 1px solid var(--lp-border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .tool-card:hover {
@@ -380,6 +491,7 @@
             color: var(--lp-muted);
             margin-bottom: 15px;
             line-height: 1.5;
+            min-height: 72px;
         }
         
         .tool-features {
@@ -405,6 +517,7 @@
         .tool-actions {
             display: flex;
             gap: 10px;
+            margin-top: auto;
         }
         
         .btn {
@@ -422,11 +535,12 @@
         .btn-primary {
             background: var(--lp-text);
             color: var(--lp-bg);
+            box-shadow: 0 0 0 1px rgba(250,250,250,0.1), 0 12px 36px rgba(250,250,250,0.16);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(250,250,250,0.12);
+            box-shadow: 0 10px 32px rgba(250,250,250,0.22);
         }
         
         .btn-secondary {
@@ -588,13 +702,17 @@
         .hero-cta {
             text-align: center;
             margin: 22px auto 6px;
-            max-width: 520px;
+            max-width: 640px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .hero-cta .btn {
             flex: none;
             display: inline-block;
-            min-width: 240px;
+            min-width: 220px;
             padding: 14px 28px;
         }
         
@@ -617,6 +735,19 @@
             
             .header h1 {
                 font-size: 2.5rem;
+            }
+
+            .hero-demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-cta .btn {
+                width: min(320px, 100%);
             }
         }
 
@@ -676,25 +807,209 @@
             font-size: 1.15rem;
             margin-bottom: 30px;
         }
+
+        .section-card {
+            background: var(--lp-surface);
+            border: 1px solid var(--lp-border);
+            border-radius: 18px;
+            padding: 28px;
+            margin: 0 0 22px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.42);
+        }
+
+        .section-card h2 {
+            font-size: 1.9rem;
+            color: var(--lp-text);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-card > p {
+            color: var(--lp-muted);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .value-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .value-list li {
+            background: var(--lp-surface2);
+            border: 1px solid var(--lp-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--lp-muted);
+        }
+
+        .value-list strong {
+            color: var(--lp-text);
+        }
+
+        .comparison-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--lp-border);
+            border-radius: 14px;
+            background: var(--lp-surface2);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 640px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--lp-border);
+            color: var(--lp-muted);
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th {
+            color: var(--lp-text);
+            font-weight: 700;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .comparison-table td strong {
+            color: var(--lp-text);
+            font-weight: 700;
+        }
+
+        .fit-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .fit-card {
+            background: var(--lp-surface2);
+            border: 1px solid var(--lp-border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .fit-card h3 {
+            font-size: 1.1rem;
+            color: var(--lp-text);
+            margin: 0 0 8px;
+        }
+
+        .fit-card ul {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--lp-muted);
+            line-height: 1.6;
+        }
+
+        .faq-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .faq-item {
+            border: 1px solid var(--lp-border);
+            border-radius: 12px;
+            background: var(--lp-surface2);
+            padding: 14px;
+        }
+
+        .faq-item h3 {
+            margin: 0 0 8px;
+            color: var(--lp-text);
+            font-size: 1rem;
+        }
+
+        .faq-item p {
+            margin: 0;
+            color: var(--lp-muted);
+            line-height: 1.55;
+            font-size: 0.95rem;
+        }
+
+        .final-cta {
+            background: linear-gradient(170deg, rgba(18,18,20,0.98), rgba(24,24,28,0.98));
+            border: 1px solid var(--lp-border-hover);
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 8px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+        }
+
+        .final-cta h2 {
+            margin: 0 0 10px;
+            color: var(--lp-text);
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .final-cta p {
+            margin: 0 0 16px;
+            color: var(--lp-muted);
+        }
+
+        .final-cta-support {
+            font-size: 0.92rem;
+            color: var(--lp-subtle);
+            margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .fit-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>LifePack</h1>
-            <p class="hero-tagline">Five apps. One life. One price.</p>
-            <p class="hero-market"><strong>Built from the searches that never stop.</strong> These are the kinds of tools and SaaS categories people look up on Google again and again—personal finance, daily planning, wellness check-ins, productivity, and local utility apps. LifePack bundles that demand into one private, local-first toolkit instead of a stack of separate subscriptions.</p>
-            <p class="hero-focus">Flagship finance tracker plus four bonus tools. Pay once ($9). Private, local-first. No subscriptions.</p>
-            <p class="hero-focus">Device-based access for privacy: LifePack unlocks in the same browser and device used at checkout. Your tool data is stored locally on your device and is not saved to external servers. This privacy-first design helps keep your information secure and under your control.</p>
+            <h1>Budget Tracker, Daily Planner, and Wellness Tools in One</h1>
+            <p class="hero-tagline">LifePack bundles five essential tools into one simple checkout.</p>
+            <div class="hero-market">
+                <strong>Stop paying for scattered subscriptions.</strong>
+                Get the core tools people repeatedly search for in one local-first bundle.
+                <details>
+                    <summary>Why this bundle exists</summary>
+                    <p>LifePack combines the daily essentials many people use separate apps for: finance tracking, daily priorities, wellness check-ins, local board posts, and eco actions.</p>
+                </details>
+            </div>
+            <p class="hero-focus">One-time $9 purchase. No subscription. Data stays on your device.</p>
+            <p class="hero-focus">Unlock runs in your checkout browser/device for privacy-focused access.</p>
+            <div class="hero-proof">
+                <span>One-time $9</span>
+                <span>No subscription</span>
+                <span>Local-first storage</span>
+            </div>
             <div class="hero-cta">
-                <a href="bundle.html" class="btn btn-primary">View LifePack offer — $9</a>
+                <a href="bundle.html" class="btn btn-primary">Get LifePack — $9 one-time</a>
+                <a href="#included-tools" class="btn btn-secondary">See what’s included</a>
+            </div>
+            <div class="hero-demo">
+                <div class="hero-demo-top">
+                    <div class="hero-demo-title">Inside the LifePack dashboard</div>
+                    <div class="hero-demo-chip">5 tools included</div>
+                </div>
+                <div class="hero-demo-grid">
+                    <div class="hero-demo-cell"><strong>Finance tracker</strong><span>Transactions, budgets, trends, and exports.</span></div>
+                    <div class="hero-demo-cell"><strong>Daily priorities</strong><span>Plan top tasks and close each day faster.</span></div>
+                    <div class="hero-demo-cell"><strong>Wellness check-in</strong><span>Capture mood and notes with private history.</span></div>
+                </div>
             </div>
         </div>
 
-        <div class="category-section">
+        <div class="category-section" id="included-tools">
             <div class="category-header">
-                <h2 class="category-title">What’s in LifePack</h2>
-                <p class="category-description">One finance tracker plus four bonus apps — five tools total.</p>
+                <h2 class="category-title">Five Tools: Finance, Planning, Wellness, and Local Productivity</h2>
+                <p class="category-description">One budget tracker plus four bonus tools in one $9 local-first bundle.</p>
             </div>
             <div class="featured-finance-wrap">
                 <div class="tool-card">
@@ -777,49 +1092,108 @@
             </div>
         </div>
 
-        <!-- LifePack (only package) -->
-        <div class="package-deals">
-            <h2>LifePack</h2>
-            <p class="package-deals-lead">Five apps. One life. One price. Pay once — no subscription.</p>
-            <div class="packages-grid packages-grid--single">
-                <div class="package-card">
-                    <div class="package-name">LifePack — 5 apps</div>
-                    <div class="package-price">$9</div>
-                    <div class="package-savings">One-time</div>
-                    <div class="package-tools">
-                        <h4>Includes:</h4>
-                        <ul>
-                            <li>Finance tracker (CashPilot AI)</li>
-                            <li>Daily priorities</li>
-                            <li>Wellness check-in</li>
-                            <li>Local board</li>
-                            <li>Eco &amp; local</li>
-                        </ul>
-                    </div>
-                    <a href="bundle.html" class="btn btn-primary" style="width: 100%;">View offer &amp; pay — $9</a>
+        <section class="section-card">
+            <h2>Why people switch to LifePack</h2>
+            <p>The goal is simple: replace scattered monthly tools with one focused daily toolkit.</p>
+            <ul class="value-list">
+                <li><strong>One payment, no subscription creep.</strong> Get five everyday tools in one checkout.</li>
+                <li><strong>Lower context switching.</strong> Finance, planning, and wellness stay in one place.</li>
+                <li><strong>Privacy-focused setup.</strong> Your tool data stays in your browser/device.</li>
+            </ul>
+        </section>
+
+        <section class="section-card">
+            <h2>LifePack vs separate app stack</h2>
+            <p>Compare the day-to-day experience before you decide.</p>
+            <div class="comparison-wrap">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Criteria</th>
+                            <th>LifePack</th>
+                            <th>Separate apps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cost model</td>
+                            <td><strong>One-time $9</strong></td>
+                            <td>Multiple subscriptions</td>
+                        </tr>
+                        <tr>
+                            <td>Tool switching</td>
+                            <td><strong>Single bundle</strong></td>
+                            <td>Multiple tabs and accounts</td>
+                        </tr>
+                        <tr>
+                            <td>Data handling</td>
+                            <td><strong>Local-first</strong></td>
+                            <td>Varies by provider</td>
+                        </tr>
+                        <tr>
+                            <td>Setup speed</td>
+                            <td><strong>One checkout flow</strong></td>
+                            <td>Repeated setup across products</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Who this is for</h2>
+            <div class="fit-grid">
+                <div class="fit-card">
+                    <h3>Great fit</h3>
+                    <ul>
+                        <li>Freelancers and solo operators</li>
+                        <li>People reducing subscription overhead</li>
+                        <li>Users who want private, local-first tools</li>
+                    </ul>
+                </div>
+                <div class="fit-card">
+                    <h3>Not ideal for</h3>
+                    <ul>
+                        <li>Teams needing admin controls and seats</li>
+                        <li>Enterprise compliance workflows</li>
+                        <li>Shared multi-user workspace requirements</li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        
-        <!-- Testimonials -->
-        <div class="testimonials">
-            <h2>What People Are Saying</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial">
-                    <div class="testimonial-text">
-                        "I love that everything works offline. I can track my habits and expenses even when I'm traveling without internet."
-                    </div>
-                    <div class="testimonial-author">- Mike R., Digital Nomad</div>
+        </section>
+
+        <section class="section-card">
+            <h2>Frequently asked questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>Is this a subscription?</h3>
+                    <p>No. LifePack is a one-time $9 purchase.</p>
                 </div>
-                
-                <div class="testimonial">
-                    <div class="testimonial-text">
-                        "The privacy-first approach is exactly what I needed. My data stays on my device, and I don't have to worry about it being sold."
-                    </div>
-                    <div class="testimonial-author">- Lisa K., Privacy Advocate</div>
+                <div class="faq-item">
+                    <h3>How does access work?</h3>
+                    <p>Access unlocks in the same browser/device used during checkout.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Where is my data stored?</h3>
+                    <p>Your tool data stays in your browser storage on your device.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I use it on multiple devices?</h3>
+                    <p>The unlock is browser/device-based. For additional devices, complete purchase flow on that device.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What exactly is included?</h3>
+                    <p>You get finance tracking, daily priorities, wellness check-ins, local board posts, and eco action tracking.</p>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <section class="final-cta">
+            <h2>Get all 5 tools for $9 once</h2>
+            <p>One payment, no recurring subscription, local-first access.</p>
+            <a href="bundle.html" class="btn btn-primary">Buy LifePack — $9</a>
+            <p class="final-cta-support">Need help before checkout? Use the contact details in your purchase flow and we will help you fast.</p>
+        </section>
         
         <div class="footer">
             <p><span class="footer-brand">LifePack</span> — Five apps. One life. One price.</p>
