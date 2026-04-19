@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$ZipUrl = "https://life-pack365.com/lifepack-tools.zip"
+$ZipUrl = "https://www.life-pack365.com/lifepack-tools.zip"
 $DestDir = Join-Path $env:USERPROFILE "LifePack"
 $ZipPath = Join-Path $DestDir "lifepack-tools.zip"
 

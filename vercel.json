@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "life-pack365.com" }],
+      "destination": "https://www.life-pack365.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/microtools/index.html" },
     { "source": "/(.*)", "destination": "/microtools/$1" }

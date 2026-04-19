@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://life-pack365.com/sitemap.xml
+Sitemap: https://www.life-pack365.com/sitemap.xml

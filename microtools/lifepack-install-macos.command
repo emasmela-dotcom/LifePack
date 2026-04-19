@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-ZIP_URL="https://life-pack365.com/lifepack-tools.zip"
+ZIP_URL="https://www.life-pack365.com/lifepack-tools.zip"
 DEST_DIR="$HOME/LifePack"
 
 mkdir -p "$DEST_DIR"
